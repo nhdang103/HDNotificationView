@@ -7,6 +7,7 @@
 //
 
 #import "ViewController.h"
+#import "HDNotificationView.h"
 
 @interface ViewController ()
 
@@ -17,6 +18,16 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
+}
+
+- (IBAction)buttonShowNotiViewTouchUpInside:(id)sender
+{
+    [HDNotificationView showNotificationViewWithImage:[UIImage imageNamed:@"Icon-72"]
+                                                title:@"Style-X"
+                                              message:@"Chụp hình Style Đẹp (free), 10h ngày 4/4, 3A Tôn Đức Thắng, Q1."
+                                              onTouch:^{
+        
+    }];
 }
 
 - (void)didReceiveMemoryWarning {
