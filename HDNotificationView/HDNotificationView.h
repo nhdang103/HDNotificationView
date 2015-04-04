@@ -10,17 +10,20 @@
 
 @interface HDNotificationView : UIToolbar
 {
+    void (^ _onTouch)();
     
+    UIImageView *_imgIcon;
+    UILabel *_lblTitle;
+    UILabel *_lblMessage;
+    
+    NSTimer *_timerHideAuto;
 }
-
-@property (nonatomic, strong) UIImageView *imgIcon;
-@property (nonatomic, strong) UILabel *lblTitle;
-@property (nonatomic, strong) UILabel *lblMessage;
-
-@property (nonatomic, strong) NSTimer *timerHideAuto;
 
 + (instancetype)sharedInstance;
 
-+ (void)showNotificationViewWithImage:(UIImage *)image title:(NSString *)title message:(NSString *)message onTouch:(void (^)())onTouch;
++ (void)showNotificationViewWithImage:(UIImage *)image title:(NSString *)title message:(NSString *)message;
++ (void)showNotificationViewWithImage:(UIImage *)image title:(NSString *)title message:(NSString *)message isAutoClose:(BOOL)isAutoClose onTouch:(void (^)())onTouch;
+
++ (void)hideNotificationViewOnComplete:(void (^)())onComplete;
 
 @end

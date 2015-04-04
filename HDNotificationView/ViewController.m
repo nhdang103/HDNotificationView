@@ -24,10 +24,11 @@
 {
     [HDNotificationView showNotificationViewWithImage:[UIImage imageNamed:@"Icon-72"]
                                                 title:@"Style-X"
-                                              message:@"Chụp hình Style Đẹp (free), 10h ngày 4/4, 3A Tôn Đức Thắng, Q1."
+                                              message:@"🎀 Toppie 🎀 Chụp hình Style Đẹp (free), 10h ngày 4/4, 3A Tôn Đức Thắng, Q1. Khi đi nhớ mang theo tiền nhé :D"
+                                          isAutoClose:YES
                                               onTouch:^{
-        
-    }];
+                                                  NSLog(@"alo 1 3 4");
+                                              }];
 }
 
 - (void)didReceiveMemoryWarning {

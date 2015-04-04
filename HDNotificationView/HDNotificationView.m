@@ -10,12 +10,17 @@
 
 #define APP_DELEGATE        [UIApplication sharedApplication].delegate
 
-#define NOTIFICATION_VIEW_FRAME_HEIGHT       68.0f
+#define NOTIFICATION_VIEW_FRAME_HEIGHT       64.0f
 
-#define IMAGE_ICON_FRAME    CGRectMake(15.0f, 8.0f, 20.0f, 20.0f)
+#define LABEL_TITLE_FONT_SIZE   14.0f
+#define LABEL_MESSAGE_FONT_SIZE 13.0f
+
 #define IMAGE_ICON_CORNER_RADIUS    3.0f
+#define IMAGE_ICON_FRAME    CGRectMake(15.0f, 8.0f, 20.0f, 20.0f)
+#define LABEL_TITLE_FRAME       CGRectMake(45.0f, 3.0f, [[UIScreen mainScreen] bounds].size.width - 45.0f, 26.0f)
+#define LABEL_MESSAGE_FRAME     CGRectMake(45.0f, 25.0f, [[UIScreen mainScreen] bounds].size.width - 45.0f, 35.0f)
 
-#define NOTIFICATION_VIEW_SHOWING_TIME                  5.0f    //second
+#define NOTIFICATION_VIEW_SHOWING_TIME                  7.0f    //second
 #define NOTIFICATION_VIEW_SHOWING_ANIMATION_TIME        0.5f    //second
 
 @implementation HDNotificationView
@@ -63,66 +68,148 @@
     [_imgIcon setClipsToBounds:YES];
     [self addSubview:_imgIcon];
     
-    _lblTitle = [[UILabel alloc] initWithFrame:CGRectMake(45.0f, 3.0f, [[UIScreen mainScreen] bounds].size.width - 45.0f, 26.0f)];
+    _lblTitle = [[UILabel alloc] initWithFrame:LABEL_TITLE_FRAME];
     [_lblTitle setTextColor:[UIColor whiteColor]];
-    [_lblTitle setFont:[UIFont fontWithName:@"HelveticaNeue-Bold" size:13.0f]];
+    [_lblTitle setFont:[UIFont fontWithName:@"HelveticaNeue-Bold" size:LABEL_TITLE_FONT_SIZE]];
     [_lblTitle setNumberOfLines:1];
     [self addSubview:_lblTitle];
     
-    _lblMessage = [[UILabel alloc] initWithFrame:CGRectMake(45.0f, 29.0f, [[UIScreen mainScreen] bounds].size.width - 45.0f, 39.0f)];
+    _lblMessage = [[UILabel alloc] initWithFrame:LABEL_MESSAGE_FRAME];
     [_lblMessage setTextColor:[UIColor whiteColor]];
-    [_lblMessage setFont:[UIFont fontWithName:@"HelveticaNeue" size:12.0f]];
+    [_lblMessage setFont:[UIFont fontWithName:@"HelveticaNeue" size:LABEL_MESSAGE_FONT_SIZE]];
     [_lblMessage setNumberOfLines:2];
     [self addSubview:_lblMessage];
     
+    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(notificationViewDidTap:)];
+    [self addGestureRecognizer:tapGesture];
 }
 
-+ (void)showNotificationViewWithImage:(UIImage *)image title:(NSString *)title message:(NSString *)message onTouch:(void (^)())onTouch
+- (void)showNotificationViewWithImage:(UIImage *)image title:(NSString *)title message:(NSString *)message isAutoClose:(BOOL)isAutoClose onTouch:(void (^)())onTouch
 {
-    // Prepare frame
-    CGRect frame = [HDNotificationView sharedInstance].frame;
-    frame.size.height = -frame.size.height;
-    [HDNotificationView sharedInstance].frame = frame;
+    // Invalidate _timerAutoClose
+    if (_timerHideAuto) {
+        [_timerHideAuto invalidate];
+        _timerHideAuto = nil;
+    }
+    
+    // onTouch
+    _onTouch = onTouch;
     
     // Image
-    [[HDNotificationView sharedInstance].imgIcon setImage:image];
+    if (image) {
+        [_imgIcon setImage:image];
+    }
+    else {
+        [_imgIcon setImage:nil];
+    }
     
     // Title
-    [[HDNotificationView sharedInstance].lblTitle setText:title];
+    if (title) {
+        [_lblTitle setText:title];
+    }
+    else {
+        [_lblTitle setText:@""];
+    }
     
     // Message
-    [[HDNotificationView sharedInstance].lblMessage setText:message];
+    if (message) {
+        [_lblMessage setText:message];
+    }
+    else {
+        [_lblMessage setText:@""];
+    }
+    [_lblMessage sizeToFit];
+    
+    
+    // Prepare frame
+    CGRect frame = self.frame;
+    frame.origin.y = -frame.size.height;
+    self.frame = frame;
     
     // Add to window
     APP_DELEGATE.window.windowLevel = UIWindowLevelStatusBar;
-    [APP_DELEGATE.window addSubview:[HDNotificationView sharedInstance]];
+    [APP_DELEGATE.window addSubview:self];
     
     [UIView animateWithDuration:NOTIFICATION_VIEW_SHOWING_ANIMATION_TIME
                           delay:0.0f
                         options:UIViewAnimationOptionCurveEaseOut
                      animations:^{
                          
-                         CGRect frame = [HDNotificationView sharedInstance].frame;
+                         CGRect frame = self.frame;
                          frame.origin.y += frame.size.height;
-                         [HDNotificationView sharedInstance].frame = frame;
+                         self.frame = frame;
                          
                      } completion:^(BOOL finished) {
                          
                      }];
     
     // Schedule to hide
-    [HDNotificationView sharedInstance].timerHideAuto =
-    [NSTimer scheduledTimerWithTimeInterval:NOTIFICATION_VIEW_SHOWING_TIME
-                                     target:[HDNotificationView class]
-                                   selector:@selector(hideNotificationViewOnComplete:)
-                                   userInfo:nil
-                                    repeats:NO];
+    if (isAutoClose) {
+        _timerHideAuto = [NSTimer scheduledTimerWithTimeInterval:NOTIFICATION_VIEW_SHOWING_TIME
+                                                          target:self
+                                                        selector:@selector(hideNotificationView)
+                                                        userInfo:nil
+                                                         repeats:NO];
+    }
+}
+- (void)hideNotificationView
+{
+    [self hideNotificationViewOnComplete:nil];
+}
+- (void)hideNotificationViewOnComplete:(void (^)())onComplete
+{
+    [UIView animateWithDuration:NOTIFICATION_VIEW_SHOWING_ANIMATION_TIME
+                          delay:0.0f
+                        options:UIViewAnimationOptionCurveEaseOut
+                     animations:^{
+                         
+                         CGRect frame = self.frame;
+                         frame.origin.y -= frame.size.height;
+                         self.frame = frame;
+                         
+                     } completion:^(BOOL finished) {
+                         
+                         [self removeFromSuperview];
+                         APP_DELEGATE.window.windowLevel = UIWindowLevelNormal;
+                         
+                         // Invalidate _timerAutoClose
+                         if (_timerHideAuto) {
+                             [_timerHideAuto invalidate];
+                             _timerHideAuto = nil;
+                         }
+                         
+                         if (onComplete) {
+                             onComplete();
+                         }
+                     }];
+}
+- (void)notificationViewDidTap:(UIGestureRecognizer *)gesture
+{
+    [self hideNotificationViewOnComplete:nil];
+    
+    if (_onTouch) {
+        _onTouch();
+    }
 }
 
+//----------------------------------------------------------------------------------
+#pragma mark - UTILITY FUNCS
+//----------------------------------------------------------------------------------
++ (void)showNotificationViewWithImage:(UIImage *)image title:(NSString *)title message:(NSString *)message
+{
+    [HDNotificationView showNotificationViewWithImage:image title:title message:message isAutoClose:YES onTouch:nil];
+}
++ (void)showNotificationViewWithImage:(UIImage *)image title:(NSString *)title message:(NSString *)message isAutoClose:(BOOL)isAutoClose onTouch:(void (^)())onTouch
+{
+    [[HDNotificationView sharedInstance] showNotificationViewWithImage:image title:title message:message isAutoClose:isAutoClose onTouch:onTouch];
+}
 + (void)hideNotificationViewOnComplete:(void (^)())onComplete
 {
-    
+    [[HDNotificationView sharedInstance] hideNotificationViewOnComplete:onComplete];
 }
+
+
+
 
 
 @end
