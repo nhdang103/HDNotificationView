@@ -18,7 +18,9 @@
 #define IMAGE_ICON_CORNER_RADIUS    3.0f
 #define IMAGE_ICON_FRAME    CGRectMake(15.0f, 8.0f, 20.0f, 20.0f)
 #define LABEL_TITLE_FRAME       CGRectMake(45.0f, 3.0f, [[UIScreen mainScreen] bounds].size.width - 45.0f, 26.0f)
-#define LABEL_MESSAGE_FRAME     CGRectMake(45.0f, 25.0f, [[UIScreen mainScreen] bounds].size.width - 45.0f, 35.0f)
+#define LABEL_MESSAGE_FRAME_HEIGHT  35.0f
+#define LABEL_MESSAGE_FRAME     CGRectMake(45.0f, 25.0f, [[UIScreen mainScreen] bounds].size.width - 45.0f, LABEL_MESSAGE_FRAME_HEIGHT)
+
 
 #define NOTIFICATION_VIEW_SHOWING_TIME                  7.0f    //second
 #define NOTIFICATION_VIEW_SHOWING_ANIMATION_TIME        0.5f    //second
@@ -78,6 +80,7 @@
     [_lblMessage setTextColor:[UIColor whiteColor]];
     [_lblMessage setFont:[UIFont fontWithName:@"HelveticaNeue" size:LABEL_MESSAGE_FONT_SIZE]];
     [_lblMessage setNumberOfLines:2];
+    _lblMessage.lineBreakMode = NSLineBreakByTruncatingTail;
     [self addSubview:_lblMessage];
     
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(notificationViewDidTap:)];
@@ -118,11 +121,13 @@
     else {
         [_lblMessage setText:@""];
     }
-    [_lblMessage sizeToFit];
-    
+    CGSize size = [_lblMessage sizeThatFits:CGSizeMake([[UIScreen mainScreen] bounds].size.width - 45.0f, MAXFLOAT)];
+    CGRect frame = _lblMessage.frame;
+    frame.size.height = (size.height > LABEL_MESSAGE_FRAME_HEIGHT ? LABEL_MESSAGE_FRAME_HEIGHT : size.height);
+    _lblMessage.frame = frame;
     
     // Prepare frame
-    CGRect frame = self.frame;
+    frame = self.frame;
     frame.origin.y = -frame.size.height;
     self.frame = frame;
     

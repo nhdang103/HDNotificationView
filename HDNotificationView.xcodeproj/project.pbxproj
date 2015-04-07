@@ -15,7 +15,6 @@
 		27A779F11ACE90CD006D62A1 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 27A779EF1ACE90CD006D62A1 /* LaunchScreen.xib */; };
 		27A779FD1ACE90CD006D62A1 /* HDNotificationViewTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 27A779FC1ACE90CD006D62A1 /* HDNotificationViewTests.m */; };
 		27A77A081ACE9116006D62A1 /* HDNotificationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 27A77A071ACE9116006D62A1 /* HDNotificationView.m */; };
-		27A77A0A1ACE927B006D62A1 /* HDNotificationView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 27A77A091ACE927B006D62A1 /* HDNotificationView.xib */; };
 		27A77A0C1ACEA053006D62A1 /* image.png in Resources */ = {isa = PBXBuildFile; fileRef = 27A77A0B1ACEA053006D62A1 /* image.png */; };
 		27A77A0E1ACEA1EA006D62A1 /* Icon-72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 27A77A0D1ACEA1EA006D62A1 /* Icon-72@2x.png */; };
 /* End PBXBuildFile section */
@@ -46,7 +45,6 @@
 		27A779FC1ACE90CD006D62A1 /* HDNotificationViewTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HDNotificationViewTests.m; sourceTree = "<group>"; };
 		27A77A061ACE9116006D62A1 /* HDNotificationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDNotificationView.h; sourceTree = "<group>"; };
 		27A77A071ACE9116006D62A1 /* HDNotificationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDNotificationView.m; sourceTree = "<group>"; };
-		27A77A091ACE927B006D62A1 /* HDNotificationView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HDNotificationView.xib; sourceTree = "<group>"; };
 		27A77A0B1ACEA053006D62A1 /* image.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = image.png; sourceTree = "<group>"; };
 		27A77A0D1ACEA1EA006D62A1 /* Icon-72@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -102,7 +100,6 @@
 				27A779E01ACE90CD006D62A1 /* Supporting Files */,
 				27A77A061ACE9116006D62A1 /* HDNotificationView.h */,
 				27A77A071ACE9116006D62A1 /* HDNotificationView.m */,
-				27A77A091ACE927B006D62A1 /* HDNotificationView.xib */,
 			);
 			path = HDNotificationView;
 			sourceTree = "<group>";
@@ -214,7 +211,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				27A779EC1ACE90CD006D62A1 /* Main.storyboard in Resources */,
-				27A77A0A1ACE927B006D62A1 /* HDNotificationView.xib in Resources */,
 				27A77A0E1ACEA1EA006D62A1 /* Icon-72@2x.png in Resources */,
 				27A779F11ACE90CD006D62A1 /* LaunchScreen.xib in Resources */,
 				27A779EE1ACE90CD006D62A1 /* Images.xcassets in Resources */,
