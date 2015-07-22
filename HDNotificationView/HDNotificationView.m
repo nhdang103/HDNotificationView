@@ -43,8 +43,15 @@
     self = [super initWithFrame:CGRectMake(0.0f, 0.0f, [[UIScreen mainScreen] bounds].size.width, NOTIFICATION_VIEW_FRAME_HEIGHT)];
     if (self) {
         
+        /// Enable orientation tracking
+        if (![[UIDevice currentDevice] isGeneratingDeviceOrientationNotifications]) {
+            [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
+        }
         
+        /// Add Orientation notification
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(orientationStatusDidChange:) name:UIDeviceOrientationDidChangeNotification object:nil];
         
+        /// Set up UI
         [self setUpUI];
     }
     
@@ -70,24 +77,45 @@
     self.multipleTouchEnabled = NO;
     self.exclusiveTouch = YES;
     
-    _imgIcon = [[UIImageView alloc] initWithFrame:IMAGE_VIEW_ICON_FRAME];
+    self.frame = CGRectMake(0.0f, 0.0f, [[UIScreen mainScreen] bounds].size.width, NOTIFICATION_VIEW_FRAME_HEIGHT);
+    
+    /// Icon
+    if (!_imgIcon) {
+        _imgIcon = [[UIImageView alloc] init];
+    }
+    _imgIcon.frame = IMAGE_VIEW_ICON_FRAME;
     [_imgIcon setContentMode:UIViewContentModeScaleAspectFill];
     [_imgIcon.layer setCornerRadius:IMAGE_VIEW_ICON_CORNER_RADIUS];
     [_imgIcon setClipsToBounds:YES];
-    [self addSubview:_imgIcon];
+    if (![_imgIcon superview]) {
+        [self addSubview:_imgIcon];
+    }
     
-    _lblTitle = [[UILabel alloc] initWithFrame:LABEL_TITLE_FRAME];
+    /// Title
+    if (!_lblTitle) {
+        _lblTitle = [[UILabel alloc] init];
+    }
+    _lblTitle.frame = LABEL_TITLE_FRAME;
     [_lblTitle setTextColor:[UIColor whiteColor]];
     [_lblTitle setFont:[UIFont fontWithName:@"HelveticaNeue-Bold" size:LABEL_TITLE_FONT_SIZE]];
     [_lblTitle setNumberOfLines:1];
-    [self addSubview:_lblTitle];
+    if (![_lblTitle superview]) {
+        [self addSubview:_lblTitle];
+    }
     
-    _lblMessage = [[UILabel alloc] initWithFrame:LABEL_MESSAGE_FRAME];
+    /// Message
+    if (!_lblMessage) {
+        _lblMessage = [[UILabel alloc] init];
+    }
+    _lblMessage.frame = LABEL_MESSAGE_FRAME;
     [_lblMessage setTextColor:[UIColor whiteColor]];
     [_lblMessage setFont:[UIFont fontWithName:@"HelveticaNeue" size:LABEL_MESSAGE_FONT_SIZE]];
     [_lblMessage setNumberOfLines:2];
     _lblMessage.lineBreakMode = NSLineBreakByTruncatingTail;
-    [self addSubview:_lblMessage];
+    if (![_lblMessage superview]) {
+        [self addSubview:_lblMessage];
+    }
+    [self fixLabelMessageSize];
     
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(notificationViewDidTap:)];
     [self addGestureRecognizer:tapGesture];
@@ -127,13 +155,10 @@
     else {
         [_lblMessage setText:@""];
     }
-    CGSize size = [_lblMessage sizeThatFits:CGSizeMake([[UIScreen mainScreen] bounds].size.width - 45.0f, MAXFLOAT)];
-    CGRect frame = _lblMessage.frame;
-    frame.size.height = (size.height > LABEL_MESSAGE_FRAME_HEIGHT ? LABEL_MESSAGE_FRAME_HEIGHT : size.height);
-    _lblMessage.frame = frame;
+    [self fixLabelMessageSize];
     
     /// Prepare frame
-    frame = self.frame;
+    CGRect frame = self.frame;
     frame.origin.y = -frame.size.height;
     self.frame = frame;
     
@@ -200,6 +225,25 @@
     if (_onTouch) {
         _onTouch();
     }
+}
+
+/// -------------------------------------------------------------------------------------------
+#pragma mark - HELPER
+/// -------------------------------------------------------------------------------------------
+- (void)fixLabelMessageSize
+{
+    CGSize size = [_lblMessage sizeThatFits:CGSizeMake([[UIScreen mainScreen] bounds].size.width - 45.0f, MAXFLOAT)];
+    CGRect frame = _lblMessage.frame;
+    frame.size.height = (size.height > LABEL_MESSAGE_FRAME_HEIGHT ? LABEL_MESSAGE_FRAME_HEIGHT : size.height);
+    _lblMessage.frame = frame;
+}
+
+/// -------------------------------------------------------------------------------------------
+#pragma mark - ORIENTATION NOTIFICATION
+/// -------------------------------------------------------------------------------------------
+- (void)orientationStatusDidChange:(NSNotification *)notification
+{
+    [self setUpUI];
 }
 
 /// -------------------------------------------------------------------------------------------

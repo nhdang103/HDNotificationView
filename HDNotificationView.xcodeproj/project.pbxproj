@@ -88,9 +88,8 @@
 		27A779DF1ACE90CD006D62A1 /* HDNotificationView */ = {
 			isa = PBXGroup;
 			children = (
+				363CEB531B5FD02B00E13D6B /* Resources */,
 				36DD9DF51B5F903600425D61 /* HDNotificationView */,
-				27A77A0D1ACEA1EA006D62A1 /* sampleIcon.png */,
-				36DD9DF61B5F978300425D61 /* sampleBackground.jpg */,
 				27A779E41ACE90CD006D62A1 /* AppDelegate.h */,
 				27A779E51ACE90CD006D62A1 /* AppDelegate.m */,
 				27A779E71ACE90CD006D62A1 /* ViewController.h */,
@@ -127,6 +126,15 @@
 				27A779FB1ACE90CD006D62A1 /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		363CEB531B5FD02B00E13D6B /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				27A77A0D1ACEA1EA006D62A1 /* sampleIcon.png */,
+				36DD9DF61B5F978300425D61 /* sampleBackground.jpg */,
+			);
+			name = Resources;
 			sourceTree = "<group>";
 		};
 		36DD9DF51B5F903600425D61 /* HDNotificationView */ = {

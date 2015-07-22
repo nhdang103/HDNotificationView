@@ -19,9 +19,6 @@
                         <subviews>
                             <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" image="sampleBackground.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="6vC-sw-hqS">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="568" id="3LS-3S-d64"/>
-                                </constraints>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ehx-5e-Xeg">
                                 <rect key="frame" x="44" y="236" width="233" height="96"/>
@@ -41,6 +38,7 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="2fi-mo-0CV" firstAttribute="top" secondItem="6vC-sw-hqS" secondAttribute="bottom" id="8sL-H1-eJw"/>
                             <constraint firstAttribute="centerY" secondItem="ehx-5e-Xeg" secondAttribute="centerY" id="RKI-wd-9Ce"/>
                             <constraint firstItem="6vC-sw-hqS" firstAttribute="top" secondItem="kh9-bI-dsS" secondAttribute="top" id="c4c-pD-qoj"/>
                             <constraint firstItem="6vC-sw-hqS" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" id="iAX-F7-z1E"/>
