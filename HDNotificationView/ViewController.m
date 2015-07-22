@@ -9,11 +9,11 @@
 #import "ViewController.h"
 #import "HDNotificationView.h"
 
-#define PUSH_NOTI_MESSAGE_1         @"Chào mừng bạn đến với style-X !!!"
-#define PUSH_NOTI_MESSAGE_2         @"a"
-#define PUSH_NOTI_MESSAGE_3         @"Push noti"
-#define PUSH_NOTI_MESSAGE_4         @"Push noti message 4"
-#define PUSH_NOTI_MESSAGE_5         @"Chào mừng bạn đến với style-X !!! Chào mừng bạn đến với style-X !!! Chào mừng bạn đến với style-X !!!"
+#define PUSH_NOTI_MESSAGE_1         @"Welcome to Style-X !!!"
+#define PUSH_NOTI_MESSAGE_2         @"Hello !!!"
+#define PUSH_NOTI_MESSAGE_3         @"This is a push notificaiton message!"
+#define PUSH_NOTI_MESSAGE_4         @"You can add icon to this notification view on the left!"
+#define PUSH_NOTI_MESSAGE_5         @"You have a message with long text which will show in two lines of notification view!"
 
 @interface ViewController()
 {
@@ -31,6 +31,7 @@
 
 - (IBAction)buttonShowNotiViewTouchUpInside:(id)sender
 {
+    /// Random message content
     NSInteger randomValue = arc4random()%5;
     
     NSString *stringValue = @"";
@@ -65,12 +66,15 @@
             break;
     }
     
-    [HDNotificationView showNotificationViewWithImage:[UIImage imageNamed:@"Icon-72"]
+    /// Show notification view
+    [HDNotificationView showNotificationViewWithImage:[UIImage imageNamed:@"sampleIcon"]
                                                 title:@"Style-X"
                                               message:stringValue
-                                          isAutoClose:YES
+                                          isAutoHide:YES
                                               onTouch:^{
-                                                  NSLog(@"alo 1 3 4");
+                                                  
+                                                  /// On touch handle. You can hide notification view or do something
+                                                  [HDNotificationView hideNotificationViewOnComplete:nil];
                                               }];
 }
 

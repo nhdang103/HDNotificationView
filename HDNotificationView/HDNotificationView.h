@@ -22,8 +22,10 @@
 + (instancetype)sharedInstance;
 
 + (void)showNotificationViewWithImage:(UIImage *)image title:(NSString *)title message:(NSString *)message;
-+ (void)showNotificationViewWithImage:(UIImage *)image title:(NSString *)title message:(NSString *)message isAutoClose:(BOOL)isAutoClose onTouch:(void (^)())onTouch;
++ (void)showNotificationViewWithImage:(UIImage *)image title:(NSString *)title message:(NSString *)message isAutoHide:(BOOL)isAutoHide;
++ (void)showNotificationViewWithImage:(UIImage *)image title:(NSString *)title message:(NSString *)message isAutoHide:(BOOL)isAutoHide onTouch:(void (^)())onTouch;
 
++ (void)hideNotificationView;
 + (void)hideNotificationViewOnComplete:(void (^)())onComplete;
 
 @end

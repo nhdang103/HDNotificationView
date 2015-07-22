@@ -15,8 +15,8 @@
 		27A779F11ACE90CD006D62A1 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 27A779EF1ACE90CD006D62A1 /* LaunchScreen.xib */; };
 		27A779FD1ACE90CD006D62A1 /* HDNotificationViewTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 27A779FC1ACE90CD006D62A1 /* HDNotificationViewTests.m */; };
 		27A77A081ACE9116006D62A1 /* HDNotificationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 27A77A071ACE9116006D62A1 /* HDNotificationView.m */; };
-		27A77A0C1ACEA053006D62A1 /* image.png in Resources */ = {isa = PBXBuildFile; fileRef = 27A77A0B1ACEA053006D62A1 /* image.png */; };
-		27A77A0E1ACEA1EA006D62A1 /* Icon-72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 27A77A0D1ACEA1EA006D62A1 /* Icon-72@2x.png */; };
+		27A77A0E1ACEA1EA006D62A1 /* sampleIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 27A77A0D1ACEA1EA006D62A1 /* sampleIcon.png */; };
+		36DD9DF71B5F978300425D61 /* sampleBackground.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 36DD9DF61B5F978300425D61 /* sampleBackground.jpg */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -45,8 +45,8 @@
 		27A779FC1ACE90CD006D62A1 /* HDNotificationViewTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HDNotificationViewTests.m; sourceTree = "<group>"; };
 		27A77A061ACE9116006D62A1 /* HDNotificationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDNotificationView.h; sourceTree = "<group>"; };
 		27A77A071ACE9116006D62A1 /* HDNotificationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDNotificationView.m; sourceTree = "<group>"; };
-		27A77A0B1ACEA053006D62A1 /* image.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = image.png; sourceTree = "<group>"; };
-		27A77A0D1ACEA1EA006D62A1 /* Icon-72@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72@2x.png"; sourceTree = "<group>"; };
+		27A77A0D1ACEA1EA006D62A1 /* sampleIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sampleIcon.png; sourceTree = "<group>"; };
+		36DD9DF61B5F978300425D61 /* sampleBackground.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = sampleBackground.jpg; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,8 +88,9 @@
 		27A779DF1ACE90CD006D62A1 /* HDNotificationView */ = {
 			isa = PBXGroup;
 			children = (
-				27A77A0D1ACEA1EA006D62A1 /* Icon-72@2x.png */,
-				27A77A0B1ACEA053006D62A1 /* image.png */,
+				36DD9DF51B5F903600425D61 /* HDNotificationView */,
+				27A77A0D1ACEA1EA006D62A1 /* sampleIcon.png */,
+				36DD9DF61B5F978300425D61 /* sampleBackground.jpg */,
 				27A779E41ACE90CD006D62A1 /* AppDelegate.h */,
 				27A779E51ACE90CD006D62A1 /* AppDelegate.m */,
 				27A779E71ACE90CD006D62A1 /* ViewController.h */,
@@ -98,8 +99,6 @@
 				27A779ED1ACE90CD006D62A1 /* Images.xcassets */,
 				27A779EF1ACE90CD006D62A1 /* LaunchScreen.xib */,
 				27A779E01ACE90CD006D62A1 /* Supporting Files */,
-				27A77A061ACE9116006D62A1 /* HDNotificationView.h */,
-				27A77A071ACE9116006D62A1 /* HDNotificationView.m */,
 			);
 			path = HDNotificationView;
 			sourceTree = "<group>";
@@ -128,6 +127,15 @@
 				27A779FB1ACE90CD006D62A1 /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		36DD9DF51B5F903600425D61 /* HDNotificationView */ = {
+			isa = PBXGroup;
+			children = (
+				27A77A061ACE9116006D62A1 /* HDNotificationView.h */,
+				27A77A071ACE9116006D62A1 /* HDNotificationView.m */,
+			);
+			name = HDNotificationView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -211,10 +219,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				27A779EC1ACE90CD006D62A1 /* Main.storyboard in Resources */,
-				27A77A0E1ACEA1EA006D62A1 /* Icon-72@2x.png in Resources */,
+				36DD9DF71B5F978300425D61 /* sampleBackground.jpg in Resources */,
+				27A77A0E1ACEA1EA006D62A1 /* sampleIcon.png in Resources */,
 				27A779F11ACE90CD006D62A1 /* LaunchScreen.xib in Resources */,
 				27A779EE1ACE90CD006D62A1 /* Images.xcassets in Resources */,
-				27A77A0C1ACEA053006D62A1 /* image.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
