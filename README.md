@@ -1,4 +1,7 @@
 ## Introduction
+HDNotificationView appears notification view like system.
+
+![alt tag](./Assets/screen_portrait.gif) ![alt tag](./Assets/screen_landscape.gif)
 
 ## Requirement
 - iOS 7.0+
