@@ -5,6 +5,10 @@
 //  Created by iOS Developer on 4/3/15.
 //  Copyright (c) 2015 AnG. All rights reserved.
 //
+//
+// Modified by Vicente Crespo Penadés - 19 Nov 2015
+// vicente.crespo.penades@gmail.com
+//
 
 #import "HDNotificationView.h"
 
@@ -19,8 +23,16 @@
 #define LABEL_MESSAGE_FRAME_HEIGHT              35.0f
 #define LABEL_MESSAGE_FRAME                     CGRectMake(45.0f, 25.0f, [[UIScreen mainScreen] bounds].size.width - 45.0f, LABEL_MESSAGE_FRAME_HEIGHT)
 
-#define NOTIFICATION_VIEW_SHOWING_DURATION                  7.0f    /// second(s)
+#define NOTIFICATION_VIEW_SHOWING_DURATION                  5.0f    /// second(s)
 #define NOTIFICATION_VIEW_SHOWING_ANIMATION_TIME            0.5f    /// second(s)
+
+
+@interface HDNotificationView ()
+
+@property (nonatomic) CGFloat autoHideSeconds;
+
+@end
+
 
 @implementation HDNotificationView
 
@@ -32,7 +44,8 @@
     static id _sharedInstance;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        _sharedInstance = [[[self class] alloc] init];
+        _sharedInstance = [[self class] new];
+        [_sharedInstance setAutoHideSeconds:NOTIFICATION_VIEW_SHOWING_DURATION];
     });
     
     return _sharedInstance;
@@ -56,6 +69,11 @@
     }
     
     return self;
+}
+
++ (void) configureForAutoHideSeconds: (CGFloat) autoHideSeconds
+{
+    [[self sharedInstance] setAutoHideSeconds:autoHideSeconds];
 }
 
 /// -------------------------------------------------------------------------------------------
@@ -119,7 +137,13 @@
     
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(notificationViewDidTap:)];
     [self addGestureRecognizer:tapGesture];
+    
+    UIPanGestureRecognizer *panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(notificationViewDidSwipe:)];
+    [self addGestureRecognizer:panRecognizer];
+    
+    
 }
+
 
 - (void)showNotificationViewWithImage:(UIImage *)image title:(NSString *)title message:(NSString *)message isAutoHide:(BOOL)isAutoHide onTouch:(void (^)())onTouch
 {
@@ -182,7 +206,7 @@
     
     // Schedule to hide
     if (isAutoHide) {
-        _timerHideAuto = [NSTimer scheduledTimerWithTimeInterval:NOTIFICATION_VIEW_SHOWING_DURATION
+        _timerHideAuto = [NSTimer scheduledTimerWithTimeInterval:_autoHideSeconds
                                                           target:self
                                                         selector:@selector(hideNotificationView)
                                                         userInfo:nil
@@ -222,10 +246,33 @@
 }
 - (void)notificationViewDidTap:(UIGestureRecognizer *)gesture
 {
+    [self hideNotificationView];
+    
     if (_onTouch) {
         _onTouch();
     }
 }
+
+- (void) notificationViewDidSwipe:(UIPanGestureRecognizer *)sender
+{
+    CGPoint startLocation;
+    if (sender.state == UIGestureRecognizerStateBegan) {
+        startLocation = [sender locationInView:self];
+    }
+    else if (sender.state == UIGestureRecognizerStateEnded) {
+        CGPoint stopLocation = [sender locationInView:self];
+        
+        CGFloat dy = stopLocation.y - startLocation.y;
+        CGFloat dx = stopLocation.x - startLocation.x;
+        CGFloat distance = sqrt(dx*dx + dy*dy );
+        
+        if (distance > 10.0) {
+            [self hideNotificationView];
+        }
+    }
+    
+}
+
 
 /// -------------------------------------------------------------------------------------------
 #pragma mark - HELPER
