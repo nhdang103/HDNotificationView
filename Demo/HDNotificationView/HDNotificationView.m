@@ -15,15 +15,19 @@
 
 #define IMAGE_VIEW_ICON_CORNER_RADIUS           3.0f
 #define IMAGE_VIEW_ICON_FRAME                   CGRectMake(15.0f, 8.0f, 20.0f, 20.0f)
+#define DRAG_HANDLER_FRAME                      CGRectMake([[UIScreen mainScreen] bounds].size.width/2-30,NOTIFICATION_VIEW_FRAME_HEIGHT-5,60,3)
 #define LABEL_TITLE_FRAME                       CGRectMake(45.0f, 3.0f, [[UIScreen mainScreen] bounds].size.width - 45.0f, 26.0f)
+#define LABEL_TITLE_FRAME_WITHOUT_IMAGE         CGRectMake(5.0f, 3.0f, [[UIScreen mainScreen] bounds].size.width - 5.0f, 26.0f)
 #define LABEL_MESSAGE_FRAME_HEIGHT              35.0f
 #define LABEL_MESSAGE_FRAME                     CGRectMake(45.0f, 25.0f, [[UIScreen mainScreen] bounds].size.width - 45.0f, LABEL_MESSAGE_FRAME_HEIGHT)
+#define LABEL_MESSAGE_FRAME_WITHOUT_IMAGE       CGRectMake(5.0f, 25.0f, [[UIScreen mainScreen] bounds].size.width - 5.0f, LABEL_MESSAGE_FRAME_HEIGHT)
 
 #define NOTIFICATION_VIEW_SHOWING_DURATION                  7.0f    /// second(s)
 #define NOTIFICATION_VIEW_SHOWING_ANIMATION_TIME            0.5f    /// second(s)
 
 @implementation HDNotificationView
-
+static BOOL _isDragging;
+BOOL isVerticalPan;
 /// -------------------------------------------------------------------------------------------
 #pragma mark - INIT
 /// -------------------------------------------------------------------------------------------
@@ -117,8 +121,25 @@
     }
     [self fixLabelMessageSize];
     
+    //Drag Handler
+    if(!_dragHandler){
+        _dragHandler = [[UIView alloc]init];
+        [self addSubview:_dragHandler];
+    }
+    _dragHandler.frame = DRAG_HANDLER_FRAME;
+    _dragHandler.layer.cornerRadius = 2;
+    _dragHandler.backgroundColor = [UIColor whiteColor];
+    if(![_dragHandler superview]){
+        [self addSubview:_dragHandler];
+    }
+    
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(notificationViewDidTap:)];
     [self addGestureRecognizer:tapGesture];
+    
+    UIPanGestureRecognizer * panGesture = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(notificationViewDidPan:)];
+    panGesture.delegate = self;
+    [self addGestureRecognizer:panGesture];
+
 }
 
 - (void)showNotificationViewWithImage:(UIImage *)image title:(NSString *)title message:(NSString *)message isAutoHide:(BOOL)isAutoHide onTouch:(void (^)())onTouch
@@ -138,6 +159,8 @@
     }
     else {
         [_imgIcon setImage:nil];
+        _lblTitle.frame =LABEL_TITLE_FRAME_WITHOUT_IMAGE;
+        _lblMessage.frame = LABEL_MESSAGE_FRAME_WITHOUT_IMAGE;
     }
     
     /// Title
@@ -195,30 +218,38 @@
 }
 - (void)hideNotificationViewOnComplete:(void (^)())onComplete
 {
-    [UIView animateWithDuration:NOTIFICATION_VIEW_SHOWING_ANIMATION_TIME
-                          delay:0.0f
-                        options:UIViewAnimationOptionCurveEaseOut
-                     animations:^{
-                         
-                         CGRect frame = self.frame;
-                         frame.origin.y -= frame.size.height;
-                         self.frame = frame;
-                         
-                     } completion:^(BOOL finished) {
-                         
-                         [self removeFromSuperview];
-                         [UIApplication sharedApplication].delegate.window.windowLevel = UIWindowLevelNormal;
-                         
-                         // Invalidate _timerAutoClose
-                         if (_timerHideAuto) {
-                             [_timerHideAuto invalidate];
-                             _timerHideAuto = nil;
-                         }
-                         
-                         if (onComplete) {
-                             onComplete();
-                         }
-                     }];
+    if(!_isDragging){
+        [UIView animateWithDuration:NOTIFICATION_VIEW_SHOWING_ANIMATION_TIME
+                              delay:0.0f
+                            options:UIViewAnimationOptionCurveEaseOut
+                         animations:^{
+                             
+                             CGRect frame = self.frame;
+                             frame.origin.y -= frame.size.height;
+                             self.frame = frame;
+                             
+                         } completion:^(BOOL finished) {
+                             
+                             [self removeFromSuperview];
+                             [UIApplication sharedApplication].delegate.window.windowLevel = UIWindowLevelNormal;
+                             
+                             // Invalidate _timerAutoClose
+                             if (_timerHideAuto) {
+                                 [_timerHideAuto invalidate];
+                                 _timerHideAuto = nil;
+                             }
+                             
+                             if (onComplete) {
+                                 onComplete();
+                             }
+                         }];
+    }else{
+        if (_timerHideAuto) {
+            [_timerHideAuto invalidate];
+            _timerHideAuto = nil;
+        }
+    }
+    
 }
 - (void)notificationViewDidTap:(UIGestureRecognizer *)gesture
 {
@@ -226,7 +257,28 @@
         _onTouch();
     }
 }
-
+- (void)notificationViewDidPan:(UIPanGestureRecognizer *)gesture{
+    if (gesture.state == UIGestureRecognizerStateEnded){
+        _isDragging = NO;
+        if(self.frame.origin.y<0 || (!_timerHideAuto))
+        {
+            [self hideNotificationView];
+        }
+    }else if (gesture.state == UIGestureRecognizerStateBegan){
+        _isDragging = YES;
+    }else if (gesture.state == UIGestureRecognizerStateChanged){
+        CGPoint translation = [gesture translationInView:self.superview];
+        CGPoint displacement = (isVerticalPan) ? CGPointMake(0, translation.y) : CGPointMake(0, translation.y);
+        CGFloat yAfterDisplacement = self.frame.origin.y+displacement.y;
+        if(yAfterDisplacement>0){
+            displacement.y = yAfterDisplacement + ((-1) * yAfterDisplacement);
+        }else if(yAfterDisplacement<(-1 * NOTIFICATION_VIEW_FRAME_HEIGHT)){
+            displacement.y = translation.y + (yAfterDisplacement+(-1*(NOTIFICATION_VIEW_FRAME_HEIGHT+yAfterDisplacement))) ;
+        }
+        
+        self.transform = CGAffineTransformMakeTranslation(displacement.x, displacement.y);
+    }
+}
 /// -------------------------------------------------------------------------------------------
 #pragma mark - HELPER
 /// -------------------------------------------------------------------------------------------
@@ -272,7 +324,19 @@
 }
 
 
-
+#pragma mark - Notification View Drag
+- (BOOL)gestureRecognizerShouldBegin:(UIPanGestureRecognizer *)panGestureRecognizer {
+    if([panGestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]){
+        CGPoint translation = [panGestureRecognizer translationInView:self];
+        isVerticalPan = fabs(translation.y) > fabs(translation.x); // BOOL property
+        return YES;
+    
+    }else
+    {
+        return NO;
+    }
+    
+}
 
 
 @end

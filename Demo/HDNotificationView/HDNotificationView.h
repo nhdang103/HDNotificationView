@@ -8,15 +8,15 @@
 
 #import <UIKit/UIKit.h>
 
-@interface HDNotificationView : UIToolbar
+@interface HDNotificationView : UIToolbar <UIGestureRecognizerDelegate>
 {
     void (^ _onTouch)();
     
     UIImageView *_imgIcon;
     UILabel *_lblTitle;
     UILabel *_lblMessage;
-    
     NSTimer *_timerHideAuto;
+    UIView  *_dragHandler;
 }
 
 + (instancetype)sharedInstance;
