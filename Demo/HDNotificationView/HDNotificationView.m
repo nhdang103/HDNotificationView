@@ -22,7 +22,7 @@
 #define LABEL_MESSAGE_FRAME                     CGRectMake(45.0f, 25.0f, [[UIScreen mainScreen] bounds].size.width - 45.0f, LABEL_MESSAGE_FRAME_HEIGHT)
 #define LABEL_MESSAGE_FRAME_WITHOUT_IMAGE       CGRectMake(5.0f, 25.0f, [[UIScreen mainScreen] bounds].size.width - 5.0f, LABEL_MESSAGE_FRAME_HEIGHT)
 
-#define NOTIFICATION_VIEW_SHOWING_DURATION                  7.0f    /// second(s)
+#define NOTIFICATION_VIEW_SHOWING_DURATION                  1200.0f    /// second(s)
 #define NOTIFICATION_VIEW_SHOWING_ANIMATION_TIME            0.5f    /// second(s)
 
 @implementation HDNotificationView
@@ -132,9 +132,9 @@ BOOL isVerticalPan;
     if(![_dragHandler superview]){
         [self addSubview:_dragHandler];
     }
-    
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(notificationViewDidTap:)];
     [self addGestureRecognizer:tapGesture];
+    tapGesture.delegate = self;
     
     UIPanGestureRecognizer * panGesture = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(notificationViewDidPan:)];
     panGesture.delegate = self;
@@ -258,6 +258,7 @@ BOOL isVerticalPan;
     }
 }
 - (void)notificationViewDidPan:(UIPanGestureRecognizer *)gesture{
+//My Implementation - Chanchal
     if (gesture.state == UIGestureRecognizerStateEnded){
         _isDragging = NO;
         if(self.frame.origin.y<0 || (!_timerHideAuto))
@@ -270,14 +271,29 @@ BOOL isVerticalPan;
         CGPoint translation = [gesture translationInView:self.superview];
         CGPoint displacement = (isVerticalPan) ? CGPointMake(0, translation.y) : CGPointMake(0, translation.y);
         CGFloat yAfterDisplacement = self.frame.origin.y+displacement.y;
+        NSLog(@"yAfterDisplacement: %f Ytranslation: %f",yAfterDisplacement,translation.y);
         if(yAfterDisplacement>0){
             displacement.y = yAfterDisplacement + ((-1) * yAfterDisplacement);
         }else if(yAfterDisplacement<(-1 * NOTIFICATION_VIEW_FRAME_HEIGHT)){
-            displacement.y = translation.y + (yAfterDisplacement+(-1*(NOTIFICATION_VIEW_FRAME_HEIGHT+yAfterDisplacement))) ;
+            displacement.y = translation.y + (yAfterDisplacement+(-1*(NOTIFICATION_VIEW_FRAME_HEIGHT+yAfterDisplacement)));
         }
         
         self.transform = CGAffineTransformMakeTranslation(displacement.x, displacement.y);
     }
+//Another implementation
+//    CGPoint startLocation;
+//    if (gesture.state == UIGestureRecognizerStateBegan) {
+//    startLocation = [gesture locationInView:self];
+//    }
+//    else if (gesture.state == UIGestureRecognizerStateEnded) {
+//    CGPoint stopLocation = [gesture locationInView:self];
+//    CGFloat dy = stopLocation.y - startLocation.y;
+//    CGFloat dx = stopLocation.x - startLocation.x;
+//    CGFloat distance = sqrt(dx*dx + dy*dy );
+//    if (distance > 10.0) {
+//        [self hideNotificationView];
+//    }
+//    }
 }
 /// -------------------------------------------------------------------------------------------
 #pragma mark - HELPER
@@ -331,10 +347,11 @@ BOOL isVerticalPan;
         isVerticalPan = fabs(translation.y) > fabs(translation.x); // BOOL property
         return YES;
     
-    }else
+    }else if ([panGestureRecognizer isKindOfClass:[UITapGestureRecognizer class]])
     {
+        [self notificationViewDidTap:panGestureRecognizer];
         return NO;
-    }
+    }else return NO;
     
 }
 

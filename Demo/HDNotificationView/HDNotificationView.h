@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface HDNotificationView : UIToolbar <UIGestureRecognizerDelegate>
+@interface HDNotificationView : UIToolbar <UIGestureRecognizerDelegate,UIGestureRecognizerDelegate>
 {
     void (^ _onTouch)();
     
