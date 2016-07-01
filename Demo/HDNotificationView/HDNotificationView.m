@@ -258,7 +258,6 @@ BOOL isVerticalPan;
     }
 }
 - (void)notificationViewDidPan:(UIPanGestureRecognizer *)gesture{
-//My Implementation - Chanchal
     if (gesture.state == UIGestureRecognizerStateEnded){
         _isDragging = NO;
         if(self.frame.origin.y<0 || (!_timerHideAuto))
@@ -269,31 +268,17 @@ BOOL isVerticalPan;
         _isDragging = YES;
     }else if (gesture.state == UIGestureRecognizerStateChanged){
         CGPoint translation = [gesture translationInView:self.superview];
-        CGPoint displacement = (isVerticalPan) ? CGPointMake(0, translation.y) : CGPointMake(0, translation.y);
-        CGFloat yAfterDisplacement = self.frame.origin.y+displacement.y;
-        NSLog(@"yAfterDisplacement: %f Ytranslation: %f",yAfterDisplacement,translation.y);
-        if(yAfterDisplacement>0){
-            displacement.y = yAfterDisplacement + ((-1) * yAfterDisplacement);
-        }else if(yAfterDisplacement<(-1 * NOTIFICATION_VIEW_FRAME_HEIGHT)){
-            displacement.y = translation.y + (yAfterDisplacement+(-1*(NOTIFICATION_VIEW_FRAME_HEIGHT+yAfterDisplacement)));
+        // Figure out where the user is trying to drag the view.
+        CGPoint newCenter = CGPointMake(self.superview.bounds.size.width / 2,
+                                        gesture.view.center.y + translation.y);
+        // See if the new position is in bounds.
+        if (newCenter.y >= (-1 * NOTIFICATION_VIEW_FRAME_HEIGHT/2) && newCenter.y <= NOTIFICATION_VIEW_FRAME_HEIGHT/2) {
+            gesture.view.center = newCenter;
+            [gesture setTranslation:CGPointZero inView:self.superview];
         }
+
         
-        self.transform = CGAffineTransformMakeTranslation(displacement.x, displacement.y);
     }
-//Another implementation
-//    CGPoint startLocation;
-//    if (gesture.state == UIGestureRecognizerStateBegan) {
-//    startLocation = [gesture locationInView:self];
-//    }
-//    else if (gesture.state == UIGestureRecognizerStateEnded) {
-//    CGPoint stopLocation = [gesture locationInView:self];
-//    CGFloat dy = stopLocation.y - startLocation.y;
-//    CGFloat dx = stopLocation.x - startLocation.x;
-//    CGFloat distance = sqrt(dx*dx + dy*dy );
-//    if (distance > 10.0) {
-//        [self hideNotificationView];
-//    }
-//    }
 }
 /// -------------------------------------------------------------------------------------------
 #pragma mark - HELPER
