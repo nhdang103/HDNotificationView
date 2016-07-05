@@ -26,8 +26,10 @@
 #define NOTIFICATION_VIEW_SHOWING_ANIMATION_TIME            0.5f    /// second(s)
 
 @implementation HDNotificationView
+
 static BOOL _isDragging;
 BOOL isVerticalPan;
+
 /// -------------------------------------------------------------------------------------------
 #pragma mark - INIT
 /// -------------------------------------------------------------------------------------------
@@ -122,14 +124,14 @@ BOOL isVerticalPan;
     [self fixLabelMessageSize];
     
     //Drag Handler
-    if(!_dragHandler){
+    if(!_dragHandler) {
         _dragHandler = [[UIView alloc]init];
         [self addSubview:_dragHandler];
     }
     _dragHandler.frame = DRAG_HANDLER_FRAME;
     _dragHandler.layer.cornerRadius = 2;
     _dragHandler.backgroundColor = [UIColor whiteColor];
-    if(![_dragHandler superview]){
+    if(![_dragHandler superview]) {
         [self addSubview:_dragHandler];
     }
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(notificationViewDidTap:)];
@@ -218,7 +220,7 @@ BOOL isVerticalPan;
 }
 - (void)hideNotificationViewOnComplete:(void (^)())onComplete
 {
-    if(!_isDragging){
+    if(!_isDragging) {
         [UIView animateWithDuration:NOTIFICATION_VIEW_SHOWING_ANIMATION_TIME
                               delay:0.0f
                             options:UIViewAnimationOptionCurveEaseOut
@@ -243,7 +245,8 @@ BOOL isVerticalPan;
                                  onComplete();
                              }
                          }];
-    }else{
+    }
+    else {
         if (_timerHideAuto) {
             [_timerHideAuto invalidate];
             _timerHideAuto = nil;
@@ -257,16 +260,19 @@ BOOL isVerticalPan;
         _onTouch();
     }
 }
-- (void)notificationViewDidPan:(UIPanGestureRecognizer *)gesture{
+- (void)notificationViewDidPan:(UIPanGestureRecognizer *)gesture
+{
     if (gesture.state == UIGestureRecognizerStateEnded){
         _isDragging = NO;
-        if(self.frame.origin.y<0 || (!_timerHideAuto))
-        {
+        if(self.frame.origin.y<0 || (!_timerHideAuto)) {
             [self hideNotificationView];
         }
-    }else if (gesture.state == UIGestureRecognizerStateBegan){
+    }
+    else if (gesture.state == UIGestureRecognizerStateBegan) {
         _isDragging = YES;
-    }else if (gesture.state == UIGestureRecognizerStateChanged){
+    }
+    else if (gesture.state == UIGestureRecognizerStateChanged) {
+        
         CGPoint translation = [gesture translationInView:self.superview];
         // Figure out where the user is trying to drag the view.
         CGPoint newCenter = CGPointMake(self.superview.bounds.size.width / 2,
@@ -276,10 +282,30 @@ BOOL isVerticalPan;
             gesture.view.center = newCenter;
             [gesture setTranslation:CGPointZero inView:self.superview];
         }
-
-        
     }
 }
+
+/// ----------------------------------------------------------------------------------
+#pragma mark - GESTURE DELEGATE
+/// ----------------------------------------------------------------------------------
+- (BOOL)gestureRecognizerShouldBegin:(UIPanGestureRecognizer *)panGestureRecognizer
+{
+    if([panGestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]) {
+        
+        CGPoint translation = [panGestureRecognizer translationInView:self];
+        isVerticalPan = fabs(translation.y) > fabs(translation.x); // BOOL property
+        return YES;
+    }
+    else if ([panGestureRecognizer isKindOfClass:[UITapGestureRecognizer class]]) {
+        
+        [self notificationViewDidTap:panGestureRecognizer];
+        return NO;
+    }
+    else {
+        return NO;
+    }
+}
+
 /// -------------------------------------------------------------------------------------------
 #pragma mark - HELPER
 /// -------------------------------------------------------------------------------------------
@@ -314,7 +340,6 @@ BOOL isVerticalPan;
 {
     [[HDNotificationView sharedInstance] showNotificationViewWithImage:image title:title message:message isAutoHide:isAutoHide onTouch:onTouch];
 }
-
 + (void)hideNotificationView
 {
     [HDNotificationView hideNotificationViewOnComplete:nil];
@@ -323,22 +348,5 @@ BOOL isVerticalPan;
 {
     [[HDNotificationView sharedInstance] hideNotificationViewOnComplete:onComplete];
 }
-
-
-#pragma mark - Notification View Drag
-- (BOOL)gestureRecognizerShouldBegin:(UIPanGestureRecognizer *)panGestureRecognizer {
-    if([panGestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]){
-        CGPoint translation = [panGestureRecognizer translationInView:self];
-        isVerticalPan = fabs(translation.y) > fabs(translation.x); // BOOL property
-        return YES;
-    
-    }else if ([panGestureRecognizer isKindOfClass:[UITapGestureRecognizer class]])
-    {
-        [self notificationViewDidTap:panGestureRecognizer];
-        return NO;
-    }else return NO;
-    
-}
-
 
 @end
