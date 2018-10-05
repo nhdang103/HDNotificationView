@@ -12,7 +12,7 @@ import SnapKit
 /// ----------------------------------------------------------------------------------
 //  MARK: - NOTIFICATION VIEW APPEARANCE
 /// ----------------------------------------------------------------------------------
-class HDNotificationAppearance: NSObject {
+public class HDNotificationAppearance: NSObject {
     
     /// Default appearance
     static let defaultAppearance = HDNotificationAppearance()
@@ -73,7 +73,7 @@ class HDNotificationAppearance: NSObject {
 /// ----------------------------------------------------------------------------------
 //  MARK: - UTILITY
 /// ----------------------------------------------------------------------------------
-extension HDNotificationView {
+public extension HDNotificationView {
     
     fileprivate static var _curNotiView: HDNotificationView?
     class func show(iconImage: UIImage?, title: String?, message: String?, fireTime: Date?, onTap: (() -> Void)?) {
@@ -94,7 +94,7 @@ extension HDNotificationView {
 /// ----------------------------------------------------------------------------------
 //  MARK: - NOTIFICATION VIEW
 /// ----------------------------------------------------------------------------------
-class HDNotificationView: UIView {
+public class HDNotificationView: UIView {
     
     var appearance: HDNotificationAppearance!
     
