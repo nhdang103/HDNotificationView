@@ -9,12 +9,15 @@
 /* Begin PBXBuildFile section */
 		36D5F31F21671F2700136DD0 /* HDNotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36D5F31E21671F2700136DD0 /* HDNotificationView.swift */; };
 		36D5F32221671F6E00136DD0 /* HDNotificationViewAppearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36D5F32121671F6E00136DD0 /* HDNotificationViewAppearance.swift */; };
+		36D5F32621674D0C00136DD0 /* SnapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36D5F32521674D0C00136DD0 /* SnapKit.framework */; };
 		36DE38912166FD580075C9C8 /* HDNotificationView.h in Headers */ = {isa = PBXBuildFile; fileRef = 36DE388F2166FD580075C9C8 /* HDNotificationView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		36D5F31E21671F2700136DD0 /* HDNotificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HDNotificationView.swift; sourceTree = "<group>"; };
 		36D5F32121671F6E00136DD0 /* HDNotificationViewAppearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HDNotificationViewAppearance.swift; sourceTree = "<group>"; };
+		36D5F3232167288200136DD0 /* Cartfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Cartfile; sourceTree = SOURCE_ROOT; };
+		36D5F32521674D0C00136DD0 /* SnapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SnapKit.framework; path = Carthage/Build/iOS/SnapKit.framework; sourceTree = "<group>"; };
 		36DE388C2166FD580075C9C8 /* HDNotificationView.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = HDNotificationView.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		36DE388F2166FD580075C9C8 /* HDNotificationView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HDNotificationView.h; sourceTree = "<group>"; };
 		36DE38902166FD580075C9C8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -25,6 +28,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				36D5F32621674D0C00136DD0 /* SnapKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -40,11 +44,20 @@
 			path = Source;
 			sourceTree = "<group>";
 		};
+		36D5F32421674D0C00136DD0 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				36D5F32521674D0C00136DD0 /* SnapKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		36DE38822166FD580075C9C8 = {
 			isa = PBXGroup;
 			children = (
 				36DE388E2166FD580075C9C8 /* HDNotificationView */,
 				36DE388D2166FD580075C9C8 /* Products */,
+				36D5F32421674D0C00136DD0 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -62,6 +75,7 @@
 				36D5F32021671F3E00136DD0 /* Source */,
 				36DE388F2166FD580075C9C8 /* HDNotificationView.h */,
 				36DE38902166FD580075C9C8 /* Info.plist */,
+				36D5F3232167288200136DD0 /* Cartfile */,
 			);
 			path = HDNotificationView;
 			sourceTree = "<group>";
@@ -287,6 +301,10 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = HDNotificationView/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
@@ -316,6 +334,10 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = HDNotificationView/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;

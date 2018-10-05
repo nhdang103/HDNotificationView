@@ -7,15 +7,11 @@
 //
 
 import UIKit
+import SnapKit
 
 /// ----------------------------------------------------------------------------------
-//  MARK: - UTILITY
+//  MARK: - NOTIFICATION VIEW APPEARANCE
 /// ----------------------------------------------------------------------------------
-extension HDNotificationView {
-    
-    
-}
-
 class HDNotificationAppearance: NSObject {
     
     /// Default appearance
@@ -75,24 +71,54 @@ class HDNotificationAppearance: NSObject {
 }
 
 /// ----------------------------------------------------------------------------------
+//  MARK: - UTILITY
+/// ----------------------------------------------------------------------------------
+extension HDNotificationView {
+    
+    fileprivate static var _curNotiView: HDNotificationView?
+    class func show(iconImage: UIImage?, title: String?, message: String?, fireTime: Date?, onTap: (() -> Void)?) {
+        
+        /// Hide current notification view if needed
+        if let __curNotiView = _curNotiView {
+            __curNotiView._dismiss(animated: false)
+        }
+        
+        /// New notification view
+        let notiView = HDNotificationView(appearance: HDNotificationAppearance.defaultAppearance)
+        notiView._onTabHandleBlock = onTap
+        
+        notiView._show()
+    }
+}
+
+/// ----------------------------------------------------------------------------------
 //  MARK: - NOTIFICATION VIEW
 /// ----------------------------------------------------------------------------------
 class HDNotificationView: UIView {
     
+    var appearance: HDNotificationAppearance!
+    
+    fileprivate var _viewBorderedContainer: UIView!
     fileprivate var _imgIcon: UIImageView!
     fileprivate var _lblTitle: UILabel!
     fileprivate var _lblMessage: UILabel!
     fileprivate var _lblTime: UILabel!
     fileprivate var _imgThumb: UIImageView?
     
+    fileprivate var _onTabHandleBlock: (() -> Void)?
+    
     //  MARK: - INIT
     /// ----------------------------------------------------------------------------------
     init(appearance: HDNotificationAppearance) {
         super.init(frame: appearance.initRect())
+        
+        self.appearance = appearance
         self._layoutSubViews()
     }
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
+        
+        self.appearance = HDNotificationAppearance.defaultAppearance
         self._layoutSubViews()
     }
     
@@ -100,19 +126,74 @@ class HDNotificationView: UIView {
     /// ----------------------------------------------------------------------------------
     fileprivate func _layoutSubViews() {
         
-        /// Background
+        _layoutBackground()
+        _layoutImageIcon()
+        _layoutLabelTitle()
+        _layoutLabelMessage()
+        _layoutLabelTime()
+        _layoutImageThumb()
+    }
+    fileprivate func _layoutBackground() {
         
-        /// Icon
+        /// Bordered view container
+        self._viewBorderedContainer = UIView()
+        self._viewBorderedContainer.backgroundColor = self.appearance.backgroundSolidColor
+        self._viewBorderedContainer.layer.cornerRadius = 8.0
+        self._viewBorderedContainer.clipsToBounds = true
         
-        /// Title
+        self.addSubview(self._viewBorderedContainer)
+        self._viewBorderedContainer.snp.makeConstraints { (maker) in
+            maker.top.equalToSuperview()
+            maker.bottom.equalToSuperview()
+            maker.leading.equalToSuperview()
+            maker.trailing.equalToSuperview()
+        }
         
-        /// Message
+        /// Shadown
+        self.clipsToBounds = false
+        self.layer.shadowColor = UIColor.black.cgColor
+        self.layer.shadowOpacity = 0.5
+        self.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
+    }
+    fileprivate func _layoutImageIcon() {
         
-        /// Time
+    }
+    fileprivate func _layoutLabelTitle() {
         
-        /// Thumb image
+    }
+    fileprivate func _layoutLabelMessage() {
         
+    }
+    fileprivate func _layoutLabelTime() {
         
+    }
+    fileprivate func _layoutImageThumb() {
+        
+    }
+    
+    //  MARK: - SHOWING
+    /// ----------------------------------------------------------------------------------
+    fileprivate func _show() {
+        
+        guard let _keyWindow = UIApplication.shared.keyWindow else {
+            return
+        }
+        
+        _keyWindow.addSubview(self)
+        self.snp.makeConstraints { (maker) in
+            maker.top.equalTo(self.appearance.marginTop)
+            maker.leading.equalTo(self.appearance.marginLeft)
+            maker.trailing.equalTo(self.appearance.marginRight)
+            maker.height.equalTo(self.appearance.sizeHeigth())
+        }
+    }
+    
+    //  MARK: - DISMISS
+    /// ----------------------------------------------------------------------------------
+    fileprivate func _dismiss(animated: Bool) {
+        
+        self.removeFromSuperview()
+        HDNotificationView._curNotiView = nil
     }
     
 }
