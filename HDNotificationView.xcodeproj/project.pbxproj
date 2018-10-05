@@ -7,10 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		36D5F31F21671F2700136DD0 /* HDNotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36D5F31E21671F2700136DD0 /* HDNotificationView.swift */; };
+		36D5F32221671F6E00136DD0 /* HDNotificationViewAppearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36D5F32121671F6E00136DD0 /* HDNotificationViewAppearance.swift */; };
 		36DE38912166FD580075C9C8 /* HDNotificationView.h in Headers */ = {isa = PBXBuildFile; fileRef = 36DE388F2166FD580075C9C8 /* HDNotificationView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		36D5F31E21671F2700136DD0 /* HDNotificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HDNotificationView.swift; sourceTree = "<group>"; };
+		36D5F32121671F6E00136DD0 /* HDNotificationViewAppearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HDNotificationViewAppearance.swift; sourceTree = "<group>"; };
 		36DE388C2166FD580075C9C8 /* HDNotificationView.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = HDNotificationView.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		36DE388F2166FD580075C9C8 /* HDNotificationView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HDNotificationView.h; sourceTree = "<group>"; };
 		36DE38902166FD580075C9C8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -27,6 +31,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		36D5F32021671F3E00136DD0 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				36D5F31E21671F2700136DD0 /* HDNotificationView.swift */,
+				36D5F32121671F6E00136DD0 /* HDNotificationViewAppearance.swift */,
+			);
+			path = Source;
+			sourceTree = "<group>";
+		};
 		36DE38822166FD580075C9C8 = {
 			isa = PBXGroup;
 			children = (
@@ -46,6 +59,7 @@
 		36DE388E2166FD580075C9C8 /* HDNotificationView */ = {
 			isa = PBXGroup;
 			children = (
+				36D5F32021671F3E00136DD0 /* Source */,
 				36DE388F2166FD580075C9C8 /* HDNotificationView.h */,
 				36DE38902166FD580075C9C8 /* Info.plist */,
 			);
@@ -96,6 +110,7 @@
 				TargetAttributes = {
 					36DE388B2166FD580075C9C8 = {
 						CreatedOnToolsVersion = 10.0;
+						LastSwiftMigration = 1000;
 					};
 				};
 			};
@@ -131,6 +146,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				36D5F31F21671F2700136DD0 /* HDNotificationView.swift in Sources */,
+				36D5F32221671F6E00136DD0 /* HDNotificationViewAppearance.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -262,6 +279,7 @@
 		36DE38952166FD580075C9C8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
@@ -281,6 +299,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -289,6 +308,7 @@
 		36DE38962166FD580075C9C8 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
