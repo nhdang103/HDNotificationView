@@ -39,8 +39,15 @@ public class HDNotificationAppearance: NSObject {
     enum HDBackgroundType {
         case blurDark
         case blurLight
-        case blurLightExtra
-        case solidColor
+        case blurExtraLight
+//        case solidColor
+        func blurEffectType() -> UIBlurEffect.Style {
+            switch self {
+            case .blurDark:         return .dark
+            case .blurLight:        return .light
+            case .blurExtraLight:   return .extraLight
+            }
+        }
     }
     var backgroundType: HDBackgroundType = .blurLight
     var backgroundSolidColor: UIColor = UIColor.white
@@ -156,7 +163,7 @@ public class HDNotificationView: UIView {
         
         /// Blur view
         let blurView = UIVisualEffectView()
-        blurView.effect = UIBlurEffect(style: .extraLight)
+        blurView.effect = UIBlurEffect(style: self.appearance.backgroundType.blurEffectType())
         self._viewBorderedContainer.addSubview(blurView)
         blurView.snp.makeConstraints { (maker) in
             maker.top.equalToSuperview()
