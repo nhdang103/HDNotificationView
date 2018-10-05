@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="HDNotificationView_Demo" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="sampleBackground.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="kFX-qO-T5i">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                            </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pe2-3y-tja">
+                                <rect key="frame" x="147" y="303.5" width="81" height="60"/>
+                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="40"/>
+                                <state key="normal" title="FIRE">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <color key="titleShadowColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="btnShowNotificationViewTouchUpInside:" destination="BYZ-38-t0r" eventType="touchUpInside" id="0xk-dX-gRr"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="kFX-qO-T5i" secondAttribute="trailing" id="HFY-PP-hkI"/>
+                            <constraint firstItem="kFX-qO-T5i" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="Z4N-Gb-Egp"/>
+                            <constraint firstItem="pe2-3y-tja" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="drS-b7-Yrv"/>
+                            <constraint firstAttribute="bottom" secondItem="kFX-qO-T5i" secondAttribute="bottom" id="gFk-a8-esS"/>
+                            <constraint firstItem="kFX-qO-T5i" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="tL3-TG-fQY"/>
+                            <constraint firstItem="pe2-3y-tja" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="vT0-VZ-njK"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="sampleBackground.jpg" width="640" height="1136"/>
+    </resources>
+</document>
