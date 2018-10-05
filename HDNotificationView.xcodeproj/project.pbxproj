@@ -10,6 +10,7 @@
 		36D5F31F21671F2700136DD0 /* HDNotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36D5F31E21671F2700136DD0 /* HDNotificationView.swift */; };
 		36D5F32221671F6E00136DD0 /* HDNotificationViewAppearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36D5F32121671F6E00136DD0 /* HDNotificationViewAppearance.swift */; };
 		36D5F32621674D0C00136DD0 /* SnapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36D5F32521674D0C00136DD0 /* SnapKit.framework */; };
+		36D5F32C2167539300136DD0 /* HDNotificationView.swift in Headers */ = {isa = PBXBuildFile; fileRef = 36D5F31E21671F2700136DD0 /* HDNotificationView.swift */; settings = {ATTRIBUTES = (Public, ); }; };
 		36DE38912166FD580075C9C8 /* HDNotificationView.h in Headers */ = {isa = PBXBuildFile; fileRef = 36DE388F2166FD580075C9C8 /* HDNotificationView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
@@ -88,6 +89,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				36DE38912166FD580075C9C8 /* HDNotificationView.h in Headers */,
+				36D5F32C2167539300136DD0 /* HDNotificationView.swift in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
