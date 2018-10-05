@@ -18,9 +18,9 @@ public class HDNotificationAppearance: NSObject {
     static let defaultAppearance = HDNotificationAppearance()
     
     /// Margin
-    let marginTop: CGFloat = 8.0
-    let marginLeft: CGFloat = 8.0
-    let marginRight: CGFloat = 8.0
+    let marginTop: CGFloat      = 28.0
+    let marginLeft: CGFloat     = 8.0
+    let marginRight: CGFloat    = 8.0
     
     /// Size
     func sizeHeigth() -> CGFloat {
@@ -107,6 +107,8 @@ public class HDNotificationView: UIView {
     
     fileprivate var _onTabHandleBlock: (() -> Void)?
     
+    fileprivate var _tapGesture: UITapGestureRecognizer?
+    
     //  MARK: - INIT
     /// ----------------------------------------------------------------------------------
     init(appearance: HDNotificationAppearance) {
@@ -132,6 +134,9 @@ public class HDNotificationView: UIView {
         _layoutLabelMessage()
         _layoutLabelTime()
         _layoutImageThumb()
+        
+        _setUpTapGesture()
+        _setUpPanGesture()
     }
     fileprivate func _layoutBackground() {
         
@@ -171,6 +176,43 @@ public class HDNotificationView: UIView {
         
     }
     
+    //  MARK: - GESTURE
+    /// ----------------------------------------------------------------------------------
+    fileprivate func _setUpTapGesture() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(_handleTapGesture(gesture:)))
+        tapGesture.numberOfTapsRequired = 1
+        tapGesture.numberOfTouchesRequired = 1
+        
+        self.addGestureRecognizer(tapGesture)
+        self._tapGesture = tapGesture
+    }
+    fileprivate func _setUpPanGesture() {
+        
+    }
+    
+    @objc fileprivate func _handleTapGesture(gesture: UITapGestureRecognizer) {
+        
+        switch gesture.state {
+        case .began:
+            break
+            
+        case .changed:
+            /// Dismiss
+            self._dismiss(animated: true)
+            
+            /// Callback
+            self._onTabHandleBlock?()
+            self._onTabHandleBlock = nil
+            
+        case .ended:
+            break
+            
+        case .possible, .cancelled, .failed:
+            break
+
+        }
+    }
+    
     //  MARK: - SHOWING
     /// ----------------------------------------------------------------------------------
     fileprivate func _show() {
@@ -183,7 +225,7 @@ public class HDNotificationView: UIView {
         self.snp.makeConstraints { (maker) in
             maker.top.equalTo(self.appearance.marginTop)
             maker.leading.equalTo(self.appearance.marginLeft)
-            maker.trailing.equalTo(self.appearance.marginRight)
+            maker.trailing.equalTo(-self.appearance.marginRight)
             maker.height.equalTo(self.appearance.sizeHeigth())
         }
     }
