@@ -18,13 +18,14 @@ public class HDNotificationAppearance: NSObject {
     static let defaultAppearance = HDNotificationAppearance()
     
     /// Margin
-    let marginTop: CGFloat      = 28.0
+    let marginTop: CGFloat      = 8.0
     let marginLeft: CGFloat     = 8.0
     let marginRight: CGFloat    = 8.0
+    let roundCornerRadius: CGFloat = 13.0
     
     /// Size
     func sizeHeigth() -> CGFloat {
-        return 90.0
+        return 108.0
     }
     func sizeWidth() -> CGFloat {
         return UIScreen.main.bounds.size.width - (marginLeft + marginRight)
@@ -60,21 +61,21 @@ public class HDNotificationAppearance: NSObject {
     
     /// Title
     public var titleTextColor: UIColor = UIColor.black
-    var titleTextFont: UIFont = UIFont.systemFont(ofSize: 12.0, weight: UIFont.Weight.semibold)
-    fileprivate let _titleMarginLeftToIcon: CGFloat = 8.0
+    var titleTextFont: UIFont = UIFont.systemFont(ofSize: 13.0, weight: UIFont.Weight.regular)
+    fileprivate let _titleMarginLeft: CGFloat = 7.0
     
     /// Message
     public var messageTextColor: UIColor = UIColor.black
-    var messageTextFont: UIFont = UIFont.systemFont(ofSize: 15.0)
-    var messageTextLineNum: Int = 2
-    fileprivate let _messageMarginTopToIcon: CGFloat = 8.0
+    var messageTextFontSize: CGFloat = 15.0
+    public var messageTextLineNum: Int = 3
+    fileprivate let _messageMarginTopToIcon: CGFloat = 9.0
     fileprivate let _messageMarginLeft: CGFloat = 12.0
     fileprivate let _messageMarginRight: CGFloat = 16.0
     
     /// Time
     var timeTextColor: UIColor = UIColor.black
-    var timeTextFont: UIFont = UIFont.systemFont(ofSize: 12.0)
-    fileprivate let _timeMarginRight: CGFloat = 16.0
+    var timeTextFont: UIFont = UIFont.systemFont(ofSize: 11.0)
+    fileprivate let _timeMarginRight: CGFloat = 15.0
 }
 
 /// ----------------------------------------------------------------------------------
@@ -83,7 +84,7 @@ public class HDNotificationAppearance: NSObject {
 public extension HDNotificationView {
     
     fileprivate static var _curNotiView: HDNotificationView?
-    class func show(iconImage: UIImage?, title: String?, message: String?, fireTime: Date?, onTap: (() -> Void)?) {
+    class func show(iconImage: UIImage?, appleTitle: String?, title: String?, message: String?, fireTime: Date?, onTap: (() -> Void)?) {
         
         /// Hide current notification view if needed
         if let __curNotiView = _curNotiView {
@@ -93,7 +94,7 @@ public extension HDNotificationView {
         /// New notification view
         let notiView = HDNotificationView(appearance: HDNotificationAppearance.defaultAppearance)
         notiView._onTabHandleBlock = onTap
-        notiView._loadingNotificationData(iconImage: iconImage, title: title, message: message, fireTime: fireTime)
+        notiView._loadingNotificationData(iconImage: iconImage, appleTitle: appleTitle, title: title, message: message, fireTime: fireTime)
         
         notiView._show()
     }
@@ -150,7 +151,7 @@ public class HDNotificationView: UIView {
         
         /// Bordered view container
         self._viewBorderedContainer = UIView()
-        self._viewBorderedContainer.layer.cornerRadius = 8.0
+        self._viewBorderedContainer.layer.cornerRadius = self.appearance.roundCornerRadius
         self._viewBorderedContainer.clipsToBounds = true
         
         self.addSubview(self._viewBorderedContainer)
@@ -202,14 +203,13 @@ public class HDNotificationView: UIView {
         self._viewBorderedContainer.addSubview(lblTitle)
         lblTitle.snp.makeConstraints { (maker) in
             maker.centerY.equalTo(self._imgIcon.snp.centerY)
-            maker.leading.equalTo(self._imgIcon.snp.trailing).offset(self.appearance._titleMarginLeftToIcon)
+            maker.leading.equalTo(self._imgIcon.snp.trailing).offset(self.appearance._titleMarginLeft)
         }
     }
     fileprivate func _layoutLabelMessage() {
         
         let lblMessage = UILabel()
         lblMessage.textColor = self.appearance.messageTextColor
-        lblMessage.font = self.appearance.messageTextFont
         lblMessage.numberOfLines = self.appearance.messageTextLineNum
         self._lblMessage = lblMessage
         
@@ -229,29 +229,16 @@ public class HDNotificationView: UIView {
     
     //  MARK: - LOADING CONTENT
     /// ----------------------------------------------------------------------------------
-    fileprivate func _loadingNotificationData(iconImage: UIImage?, title: String?, message: String?, fireTime: Date?) {
+    fileprivate func _loadingNotificationData(iconImage: UIImage?, appleTitle: String?, title: String?, message: String?, fireTime: Date?) {
         
         /// Icon
         self._imgIcon.image = iconImage
         
-        /// Title
-        self._lblTitle.text = title
+        /// App Title
+        self._lblTitle.text = appleTitle
         
-        /// Message
-        if let _message = message {
-            let paragraphStyle              = NSMutableParagraphStyle()
-            paragraphStyle.lineSpacing      = 0.75
-            
-            let attributedMessage = NSAttributedString(
-                string: _message,
-                attributes: [
-                    .paragraphStyle: paragraphStyle
-                ])
-            _lblMessage.attributedText = attributedMessage
-        }
-        else {
-            self._lblMessage.text = ""
-        }
+        /// Title + Message
+        _lblMessage.attributedText = _messageAttributedStringFrom(appleTitle: appleTitle, title: title, message: message)
     }
     
     //  MARK: - TAP GESTURE
@@ -298,6 +285,8 @@ public class HDNotificationView: UIView {
             return
         }
         
+        _keyWindow.windowLevel = .statusBar
+        
         _keyWindow.addSubview(self)
         self.snp.makeConstraints { (maker) in
             maker.top.equalTo(self.appearance.marginTop)
@@ -316,6 +305,49 @@ public class HDNotificationView: UIView {
         
         self.removeFromSuperview()
         HDNotificationView._curNotiView = nil
+        
+        UIApplication.shared.keyWindow?.windowLevel = .normal
+    }
+    
+    //  MARK: - HELPER
+    /// ----------------------------------------------------------------------------------
+    fileprivate func _messageAttributedStringFrom(appleTitle: String?, title: String?, message: String?) -> NSAttributedString {
+        
+        var messageString: String = ""
+        var isHaveTitle: Bool = false
+        var isHaveMessage: Bool = false
+        if let _title = title {
+            isHaveTitle = true
+            messageString += _title
+        }
+        if let _message = message {
+            isHaveMessage = true
+            if isHaveTitle {
+                messageString += "\n"
+            }
+            messageString += _message
+        }
+        
+        let attributedMessage = NSMutableAttributedString(string: messageString)
+        if isHaveTitle {
+            attributedMessage.addAttribute(
+                .font,
+                value: UIFont.systemFont(ofSize: self.appearance.messageTextFontSize, weight: .semibold),
+                range: NSRange(location: 0, length: title!.count))
+        }
+        if isHaveMessage {
+            attributedMessage.addAttribute(
+                .font,
+                value: UIFont.systemFont(ofSize: self.appearance.messageTextFontSize, weight: .regular),
+                range: NSRange(location: isHaveTitle ? title!.count+1 : 0, length: message!.count))
+        }
+        
+        let paragraphStyle              = NSMutableParagraphStyle()
+        paragraphStyle.lineSpacing      = 0.133 * self.appearance.messageTextFontSize
+        paragraphStyle.lineBreakMode    = .byTruncatingTail
+        attributedMessage.addAttribute(.paragraphStyle, value: paragraphStyle, range: NSRange(location: 0, length: messageString.count))
+        
+        return attributedMessage
     }
     
 }

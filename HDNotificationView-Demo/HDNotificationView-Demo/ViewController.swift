@@ -20,8 +20,9 @@ class ViewController: UIViewController {
         
         HDNotificationView.show(
             iconImage: UIImage(named: "Icon"),
-            title: "Bé Yêu".uppercased(),
-            message: "Kiến thức mỗi ngày \"Những điều lưu ý khi con bị chảy máu cam\"",
+            appleTitle: "Lịch Vạn Niên".uppercased(),
+            title: "Quốc tang nguyên Tổng bí thư Đỗ Mười ⏱⏱⏱",
+            message: "Quốc tang nguyên Tổng bí thư Đỗ Mười trong 2 ngày 06 và 07/10.",
             fireTime: Date(),
             onTap: {
                 
