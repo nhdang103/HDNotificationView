@@ -11,6 +11,7 @@
 		36D5F32221671F6E00136DD0 /* HDNotificationViewAppearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36D5F32121671F6E00136DD0 /* HDNotificationViewAppearance.swift */; };
 		36D5F32621674D0C00136DD0 /* SnapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36D5F32521674D0C00136DD0 /* SnapKit.framework */; };
 		36DE38912166FD580075C9C8 /* HDNotificationView.h in Headers */ = {isa = PBXBuildFile; fileRef = 36DE388F2166FD580075C9C8 /* HDNotificationView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		36DE71242168B41F00D9FBB6 /* HDNotificationData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36DE71232168B41F00D9FBB6 /* HDNotificationData.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -21,6 +22,7 @@
 		36DE388C2166FD580075C9C8 /* HDNotificationView.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = HDNotificationView.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		36DE388F2166FD580075C9C8 /* HDNotificationView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HDNotificationView.h; sourceTree = "<group>"; };
 		36DE38902166FD580075C9C8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		36DE71232168B41F00D9FBB6 /* HDNotificationData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HDNotificationData.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -40,6 +42,7 @@
 			children = (
 				36D5F31E21671F2700136DD0 /* HDNotificationView.swift */,
 				36D5F32121671F6E00136DD0 /* HDNotificationViewAppearance.swift */,
+				36DE71232168B41F00D9FBB6 /* HDNotificationData.swift */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -162,6 +165,7 @@
 			files = (
 				36D5F31F21671F2700136DD0 /* HDNotificationView.swift in Sources */,
 				36D5F32221671F6E00136DD0 /* HDNotificationViewAppearance.swift in Sources */,
+				36DE71242168B41F00D9FBB6 /* HDNotificationData.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
