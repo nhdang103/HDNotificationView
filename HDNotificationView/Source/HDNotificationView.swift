@@ -2,7 +2,7 @@
 //  HDNotificationView.swift
 //  HDNotificationView
 //
-//  Created by VN_LW70130-M on 10/5/18.
+//  Created by nhdang103 on 10/5/18.
 //  Copyright © 2018 AnG Studio. All rights reserved.
 //
 
@@ -14,24 +14,24 @@ import SnapKit
 /// ----------------------------------------------------------------------------------
 public extension HDNotificationView {
     
-    fileprivate static var _curNotiView: HDNotificationView?
-    class func show(data: HDNotificationData?, onTap: (() -> Void)?) {
+    class func show(data: HDNotificationData?, onTap: (() -> Void)? = nil, onDidDismiss: (() -> Void)? = nil) -> HDNotificationView? {
         
-        guard let _data = data else { return }
-        
-        /// Hide current notification view if needed
-        if let __curNotiView = _curNotiView {
-            __curNotiView.dismiss(animated: false, onComplete: {})
+        guard let _data = data else {
+            return nil
         }
         
         /// New notification view
         let notiView = HDNotificationView(appearance: HDNotificationAppearance.defaultAppearance, notiData: _data)
+        
         notiView.onTabHandleBlock = onTap
+        notiView.onDidDismissBlock = onDidDismiss
+        
         notiView.notiData = data
         notiView.loadingNotificationData()
-        notiView.show(onComplete: {
-            
-        })
+        
+        notiView.show(onComplete: nil)
+        
+        return notiView
     }
 }
 
@@ -40,9 +40,12 @@ public extension HDNotificationView {
 /// ----------------------------------------------------------------------------------
 public class HDNotificationView: UIView {
     
+    fileprivate static var _curNotiView: HDNotificationView?
+    
     var appearance: HDNotificationAppearance
     var notiData: HDNotificationData?
     
+    var constraintMarginTop: NSLayoutConstraint?
     var viewBorderedContainer: UIView!
     var imgIcon: UIImageView!
     var lblTitle: UILabel!
@@ -50,9 +53,10 @@ public class HDNotificationView: UIView {
     var lblTime: UILabel!
     var imgThumb: UIImageView?
     
-    var onTabHandleBlock: (() -> Void)?
-    
     var tapGesture: UITapGestureRecognizer?
+    
+    var onTabHandleBlock: (() -> Void)?
+    var onDidDismissBlock: (() -> Void)?
     
     //  MARK: - INIT
     /// ----------------------------------------------------------------------------------
@@ -117,7 +121,7 @@ public class HDNotificationView: UIView {
         /// Shadown
         self.clipsToBounds = false
         self.layer.shadowColor = UIColor.black.cgColor
-        self.layer.shadowOpacity = 0.5
+        self.layer.shadowOpacity = 0.3
         self.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
     }
     private func _layoutImageIcon() {
@@ -131,8 +135,8 @@ public class HDNotificationView: UIView {
             
         self.viewBorderedContainer.addSubview(imgIcon)
         imgIcon.snp.makeConstraints { (maker) in
-            maker.top.equalTo(_appearance.iconMarginTop)
-            maker.left.equalTo(_appearance.iconMarginLeft)
+            maker.top.equalTo(_appearance.iconMargin.top)
+            maker.left.equalTo(_appearance.iconMargin.left)
             maker.size.equalTo(_appearance.iconSize)
         }
     }
@@ -148,7 +152,7 @@ public class HDNotificationView: UIView {
         self.viewBorderedContainer.addSubview(lblTitle)
         lblTitle.snp.makeConstraints { (maker) in
             maker.centerY.equalTo(self.imgIcon.snp.centerY)
-            maker.leading.equalTo(self.imgIcon.snp.trailing).offset(_appearance.titleMarginLeft)
+            maker.leading.equalTo(self.imgIcon.snp.trailing).offset(_appearance.titleMargin.left)
         }
     }
     private func _layoutLabelMessage() {
@@ -162,9 +166,10 @@ public class HDNotificationView: UIView {
         
         self.viewBorderedContainer.addSubview(lblMessage)
         lblMessage.snp.makeConstraints { (maker) in
-            maker.leading.equalTo(_appearance.messageMarginLeft)
-            maker.trailing.equalTo(-_appearance.messageMarginRight)
-            maker.top.equalTo(self.imgIcon.snp.bottom).offset(_appearance.messageMarginTopToIcon)
+            maker.leading.equalTo(_appearance.messageMargin.left)
+            maker.trailing.equalTo(-_appearance.messageMargin.right)
+            maker.top.equalTo(self.imgIcon.snp.bottom).offset(_appearance.messageMargin.top)
+            maker.bottom.lessThanOrEqualTo(0.0)
         }
     }
     private func _layoutLabelTime() {
@@ -178,7 +183,7 @@ public class HDNotificationView: UIView {
         
         self.viewBorderedContainer.addSubview(lblTime)
         lblTime.snp.makeConstraints { (maker) in
-            maker.trailing.equalTo(-_appearance.timeMarginRight)
+            maker.trailing.equalTo(-_appearance.timeMargin.right)
             maker.centerY.equalTo(self.lblTitle.snp.centerY)
         }
     }
@@ -227,9 +232,7 @@ public class HDNotificationView: UIView {
             
         case .ended:
             /// Dismiss
-            self.dismiss(animated: true, onComplete: {
-                
-            })
+            self.dismiss(animated: true, onComplete: nil)
             
             /// Callback
             self.onTabHandleBlock?()
@@ -246,10 +249,63 @@ public class HDNotificationView: UIView {
     private func _setUpPanGesture() {
         
     }
+    @objc private func _handlePanGesture(gesture: UIPanGestureRecognizer) {
+        
+    }
     
-    //  MARK: - SHOWING
+    //  MARK: - SHOW
     /// ----------------------------------------------------------------------------------
     public func show(onComplete: (() -> Void)?) {
+        
+        /// Hide current notification view if needed
+        if let __curNotiView = HDNotificationView._curNotiView {
+            __curNotiView.dismiss(animated: false, onComplete: nil)
+        }
+        
+        /// Pre-condition
+        guard let _notiData = self.notiData else {
+            return
+        }
+        guard let _keyWindow = UIApplication.shared.keyWindow else {
+            return
+        }
+        let _appearance = self.appearance
+        
+        _keyWindow.windowLevel = .statusBar
+        
+        _keyWindow.addSubview(self)
+        self.snp.makeConstraints { (maker) in
+            maker.leading.equalTo(_appearance.viewMargin.left)
+            maker.trailing.equalTo(-_appearance.viewMargin.right)
+            maker.height.equalTo(_appearance.viewSizeHeigth(notiData: _notiData))
+            
+            self.constraintMarginTop = maker.top.equalToSuperview().offset(_appearance.viewMarginTopPreDisplay(notiData: _notiData)).constraint.layoutConstraints.first
+        }
+        self.layoutIfNeeded()
+        
+        /// Saving
+        HDNotificationView._curNotiView = self
+        
+        /// Animation
+        self.constraintMarginTop?.constant = _appearance.viewMargin.top
+        UIView.animate(
+            withDuration: _appearance.animationDuration,
+            animations: {
+                _keyWindow.layoutIfNeeded()
+            },
+            completion: { (finished) in
+                
+            })
+        
+        /// Shedule to dismiss
+        self._setUpTimerScheduleToDismiss()
+    }
+    
+    //  MARK: - DISMISS
+    /// ----------------------------------------------------------------------------------
+    public func dismiss(animated: Bool, onComplete: (() -> Void)?) {
+        
+        self._invalidateTimer()
         
         guard let _notiData = self.notiData else {
             return
@@ -257,32 +313,51 @@ public class HDNotificationView: UIView {
         guard let _keyWindow = UIApplication.shared.keyWindow else {
             return
         }
-        
-        _keyWindow.windowLevel = .statusBar
-        
         let _appearance = self.appearance
         
-        _keyWindow.addSubview(self)
-        self.snp.makeConstraints { (maker) in
-            maker.top.equalTo(_appearance.viewMarginTop)
-            maker.leading.equalTo(_appearance.viewMarginLeft)
-            maker.trailing.equalTo(-_appearance.viewMarginRight)
-            maker.height.equalTo(_appearance.viewSizeHeigth(notiData: _notiData))
+        /// Reset and callback
+        func _resetAndCallback() {
+            self.removeFromSuperview()
+            HDNotificationView._curNotiView = nil
+            
+            UIApplication.shared.keyWindow?.windowLevel = .normal
+            
+            self.onDidDismissBlock?()
+            onComplete?()
         }
         
-        /// Saving
-        HDNotificationView._curNotiView = self
+        /// Animate dismiss
+        if animated {
+            self.constraintMarginTop?.constant = _appearance.viewMarginTopPreDisplay(notiData: _notiData)
+            UIView.animate(
+                withDuration: _appearance.animationDuration,
+                animations: {
+                    _keyWindow.layoutIfNeeded()
+            },
+                completion: { (finished) in
+                    _resetAndCallback()
+            })
+        }
+        else {
+            _resetAndCallback()
+        }
     }
     
-    //  MARK: - DISMISS
+    //  MARK: - TIMER
     /// ----------------------------------------------------------------------------------
-    public func dismiss(animated: Bool, onComplete: (() -> Void)?) {
+    private var _timer: Timer?
+    private func _invalidateTimer() {
+        self._timer?.invalidate()
+        self._timer = nil
+    }
+    private func _setUpTimerScheduleToDismiss() {
+        self._invalidateTimer()
         
-        self.removeFromSuperview()
-        HDNotificationView._curNotiView = nil
+        let _appearance = self.appearance
+        self._timer = Timer.scheduledTimer(timeInterval: _appearance.appearingDuration, target: self, selector: #selector(_handleTimerSheduleToDismiss), userInfo: nil, repeats: false)
         
-        UIApplication.shared.keyWindow?.windowLevel = .normal
-        
-        onComplete?()
+    }
+    @objc private func _handleTimerSheduleToDismiss() {
+        self.dismiss(animated: true, onComplete: nil)
     }
 }

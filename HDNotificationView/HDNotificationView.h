@@ -2,7 +2,7 @@
 //  HDNotificationView.h
 //  HDNotificationView
 //
-//  Created by VN_LW70130-M on 10/5/18.
+//  Created by nhdang103 on 10/5/18.
 //  Copyright © 2018 AnG Studio. All rights reserved.
 //
 

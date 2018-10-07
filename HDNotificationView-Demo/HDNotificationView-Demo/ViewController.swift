@@ -18,16 +18,14 @@ class ViewController: UIViewController {
     
     @IBAction func btnShowNotificationViewTouchUpInside(_ sender: Any?) {
         
-        let notiAppearance = HDNotificationAppearance.defaultAppearance
-        notiAppearance.messageTextLineNum = 0
-        
         let notiData = HDNotificationData(
             iconImage: UIImage(named: "Icon"),
             appTitle: "Lịch Vạn Niên".uppercased(),
             title: "Quốc tang nguyên Tổng bí thư Đỗ Mười ⏱",
             message: "Quốc tang nguyên Tổng bí thư Đỗ Mười trong 2 ngày 06 và 07/10.",
             time: "now")
-        HDNotificationView.show(data: notiData, onTap: {})
+        
+        HDNotificationView.show(data: notiData, onTap: nil, onDidDismiss: nil)
     }
 }
 

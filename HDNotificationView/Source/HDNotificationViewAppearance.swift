@@ -2,7 +2,7 @@
 //  HDNotificationViewAppearance.swift
 //  HDNotificationView
 //
-//  Created by VN_LW70130-M on 10/5/18.
+//  Created by nhdang103 on 10/5/18.
 //  Copyright © 2018 AnG Studio. All rights reserved.
 //
 
@@ -13,13 +13,35 @@ public class HDNotificationAppearance: NSObject {
     /// Default appearance
     public static let defaultAppearance = HDNotificationAppearance()
     
+    //  MARK: - NOTIFICATION VIEW
+    /// ----------------------------------------------------------------------------------
     /// Margin
-    let viewMarginTop: CGFloat      = 8.0
-    let viewMarginLeft: CGFloat     = 8.0
-    let viewMarginRight: CGFloat    = 8.0
+    let viewMargin: UIEdgeInsets = UIEdgeInsets(top: 8.0, left: 8.0, bottom: 0.0, right: 8.0)
     let viewRoundCornerRadius: CGFloat = 13.0
     
+    func viewMarginTopPreDisplay(notiData: HDNotificationData?) -> CGFloat {
+        guard let _notiData = notiData else {
+            return 0.0
+        }
+        
+        let offset = self.viewMargin.top + self.viewSizeHeigth(notiData: _notiData)
+        return -offset
+    }
+    
     /// Size
+    func viewInitRect(notiData: HDNotificationData?) -> CGRect {
+        
+        guard let _notiData = notiData else {
+            return CGRect.zero
+        }
+        
+        return CGRect(
+            x: self.viewMargin.left,
+            y: self.viewMarginTopPreDisplay(notiData: _notiData),
+            width: self.viewSizeWidth(),
+            height: self.viewSizeHeigth(notiData: _notiData))
+    }
+    
     func viewSizeHeigth(notiData: HDNotificationData?) -> CGFloat {
         
         guard let _notiData = notiData else {
@@ -29,16 +51,16 @@ public class HDNotificationAppearance: NSObject {
         var viewHeight: CGFloat = 0.0
         
         /// Top padding
-        viewHeight += self.iconMarginTop
+        viewHeight += self.iconMargin.top
         
         /// Icon height
         viewHeight += self.iconSize.height
         
         /// Icon bot margin
-        viewHeight += self.messageMarginTopToIcon
+        viewHeight += self.messageMargin.top
         
         /// Message height
-        let messageWidth = self.viewSizeWidth() - (self.messageMarginLeft + self.messageMarginRight)
+        let messageWidth = self.viewSizeWidth() - (self.messageMargin.left + self.messageMargin.right)
         let tempLabel = UILabel()
         tempLabel.attributedText = self.messageAttributedStringFrom(title: _notiData.title, message: _notiData.message)
         tempLabel.numberOfLines = self.messageTextLineNum
@@ -46,25 +68,20 @@ public class HDNotificationAppearance: NSObject {
         viewHeight += messageSize.height
         
         /// Message bot margin
-        viewHeight += self.messageMarginBot
+        viewHeight += self.messageMargin.bottom
         
         return viewHeight
-//        return 108.0
     }
     func viewSizeWidth() -> CGFloat {
-        return UIScreen.main.bounds.size.width - (viewMarginLeft + viewMarginRight)
+        return UIScreen.main.bounds.size.width - (self.viewMargin.left + self.viewMargin.right)
     }
     
-    /// Rect
-    func viewInitRect(notiData: HDNotificationData?) -> CGRect {
-        
-        guard let _notiData = notiData else {
-            return CGRect.zero
-        }
-        
-        return CGRect(x: self.viewMarginLeft, y: self.viewMarginTop, width: self.viewSizeWidth(), height: self.viewSizeHeigth(notiData: _notiData))
-    }
+    /// Timing
+    public var animationDuration: TimeInterval = 0.5
+    public var appearingDuration: TimeInterval = 7.0
     
+    //  MARK: - VIEW COMPONENTS
+    /// ----------------------------------------------------------------------------------
     /// Background
     public enum HDBackgroundType {
         case blurDark
@@ -84,28 +101,24 @@ public class HDNotificationAppearance: NSObject {
     
     /// Icon
     let iconSize: CGSize = CGSize(width: 20.0, height: 20.0)
-    let iconMarginTop: CGFloat = 10.0
-    let iconMarginLeft: CGFloat = 10.0
+    let iconMargin: UIEdgeInsets = UIEdgeInsets(top: 10.0, left: 10.0, bottom: 0.0, right: 0.0)
     let iconRoundCornerRadius: CGFloat = 4.0
     
     /// Title
     public var titleTextColor: UIColor = UIColor.black
     var titleTextFont: UIFont = UIFont.systemFont(ofSize: 13.0, weight: UIFont.Weight.regular)
-    let titleMarginLeft: CGFloat = 7.0
+    let titleMargin: UIEdgeInsets = UIEdgeInsets(top: 0.0, left: 7.0, bottom: 0.0, right: 0.0)
     
     /// Message
     public var messageTextColor: UIColor = UIColor.black
     var messageTextFontSize: CGFloat = 15.0
     public var messageTextLineNum: Int = 3
-    let messageMarginTopToIcon: CGFloat = 9.0
-    let messageMarginLeft: CGFloat = 12.0
-    let messageMarginRight: CGFloat = 16.0
-    let messageMarginBot: CGFloat = 11.0
+    let messageMargin: UIEdgeInsets = UIEdgeInsets(top: 9.0, left: 12.0, bottom: 11.0, right: 16.0)
     
     /// Time
     var timeTextColor: UIColor = UIColor.black
     var timeTextFont: UIFont = UIFont.systemFont(ofSize: 13.0, weight: UIFont.Weight.regular)
-    let timeMarginRight: CGFloat = 16.0
+    let timeMargin: UIEdgeInsets = UIEdgeInsets(top: 0.0, left: 0.0, bottom: 0.0, right: 16.0)
     
     //  MARK: - HELPER
     /// ----------------------------------------------------------------------------------
