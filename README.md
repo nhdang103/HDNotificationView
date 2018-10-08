@@ -14,8 +14,12 @@ github "nhdang103/HDNotificationView"
 ```
 
 **Manual**
-- Add thress files **HDNotificationView.swift**, **HDNotificationData.swift** and **HDNotificationAppearance.swift** to your project.
-- Add **Snapkit** as a dependence framework to your project
+- Add thress files below to your project:
+   + **HDNotificationView.swift**
+   + **HDNotificationData.swift**
+   + **HDNotificationAppearance.swift**
+   
+- Add **Snapkit** as a dependence framework to your project.
 
 ## Usage
 
