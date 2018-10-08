@@ -20,9 +20,9 @@ class ViewController: UIViewController {
         
         let notiData = HDNotificationData(
             iconImage: UIImage(named: "Icon"),
-            appTitle: "Lịch Vạn Niên".uppercased(),
-            title: "Quốc tang nguyên Tổng bí thư Đỗ Mười ⏱",
-            message: "Quốc tang nguyên Tổng bí thư Đỗ Mười trong 2 ngày 06 và 07/10.",
+            appTitle: "Notification View".uppercased(),
+            title: "This is a sample of HDNotificationView ⏰",
+            message: "This area that you can input some message to notify to user 🔔",
             time: "now")
         
         HDNotificationView.show(data: notiData, onTap: nil, onDidDismiss: nil)

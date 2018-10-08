@@ -77,9 +77,9 @@ public class HDNotificationAppearance: NSObject {
     }
     
     /// Timing
-    public var animationDuration: TimeInterval = 0.5
+    public var animationDuration: TimeInterval = 0.4
     var returnPositionAnimationDuration: TimeInterval = 0.2
-    public var appearingDuration: TimeInterval = 7.0
+    public var appearingDuration: TimeInterval = 6.0
     
     //  MARK: - VIEW COMPONENTS
     /// ----------------------------------------------------------------------------------
@@ -125,40 +125,44 @@ public class HDNotificationAppearance: NSObject {
     /// ----------------------------------------------------------------------------------
     func messageAttributedStringFrom(title: String?, message: String?) -> NSAttributedString {
         
-        var messageString: String = ""
-        var isHaveTitle: Bool = false
-        var isHaveMessage: Bool = false
-        if let _title = title {
-            isHaveTitle = true
-            messageString += _title
-        }
-        if let _message = message {
-            isHaveMessage = true
-            if isHaveTitle {
-                messageString += "\n"
-            }
-            messageString += _message
+        var _title: String = ""
+        if let __title = title {
+            _title += __title
         }
         
-        let attributedMessage = NSMutableAttributedString(string: messageString)
-        if isHaveTitle {
-            attributedMessage.addAttribute(
-                .font,
-                value: UIFont.systemFont(ofSize: self.messageTextFontSize, weight: .semibold),
-                range: NSRange(location: 0, length: title!.count))
+        var _message: String = ""
+        if let __message = message {
+            _message += __message
         }
-        if isHaveMessage {
-            attributedMessage.addAttribute(
-                .font,
-                value: UIFont.systemFont(ofSize: self.messageTextFontSize, weight: .regular),
-                range: NSRange(location: isHaveTitle ? title!.count+1 : 0, length: message!.count))
-        }
+        
+        let _newline: String = "\n"
         
         let paragraphStyle              = NSMutableParagraphStyle()
         paragraphStyle.lineSpacing      = 0.133 * self.messageTextFontSize
         paragraphStyle.lineBreakMode    = .byTruncatingTail
-        attributedMessage.addAttribute(.paragraphStyle, value: paragraphStyle, range: NSRange(location: 0, length: messageString.count))
         
-        return attributedMessage
+        let _titleAttributedString = NSAttributedString(
+            string: _title, attributes: [
+                .font : UIFont.systemFont(ofSize: self.messageTextFontSize, weight: .semibold),
+             .paragraphStyle : paragraphStyle
+            ])
+        let _newLineAttributedString = NSAttributedString(
+            string: _newline, attributes: [
+                .font : UIFont.systemFont(ofSize: self.messageTextFontSize, weight: .semibold),
+                .paragraphStyle : paragraphStyle])
+        let _messageAttributedString = NSAttributedString(
+            string: _message, attributes: [
+                .font : UIFont.systemFont(ofSize: self.messageTextFontSize, weight: .regular),
+                .paragraphStyle : paragraphStyle])
+        
+        /// Final attributed string
+        let _attributedString = NSMutableAttributedString()
+        _attributedString.append(_titleAttributedString)
+        if (_title.count > 0 && _message.count > 0) {
+            _attributedString.append(_newLineAttributedString)
+        }
+        _attributedString.append(_messageAttributedString)
+        
+        return _attributedString
     }
 }
