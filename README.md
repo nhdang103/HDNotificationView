@@ -14,7 +14,7 @@ github "nhdang103/HDNotificationView"
 ```
 
 **Manual**
-- Add thress files below to your project:
+- Add there files below to your project:
    - **HDNotificationView.swift**
    - **HDNotificationData.swift**
    - **HDNotificationAppearance.swift**
