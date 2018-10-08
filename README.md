@@ -8,7 +8,7 @@ HDNotificationView appears notification view like system.
 
 ## Installation
 
-**Carthage"
+**Carthage**
 ```
 github "nhdang103/HDNotificationView"
 ```
