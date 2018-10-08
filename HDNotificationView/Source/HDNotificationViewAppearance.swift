@@ -78,6 +78,7 @@ public class HDNotificationAppearance: NSObject {
     
     /// Timing
     public var animationDuration: TimeInterval = 0.5
+    var returnPositionAnimationDuration: TimeInterval = 0.2
     public var appearingDuration: TimeInterval = 7.0
     
     //  MARK: - VIEW COMPONENTS

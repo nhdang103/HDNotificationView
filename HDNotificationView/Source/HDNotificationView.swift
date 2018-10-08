@@ -54,6 +54,7 @@ public class HDNotificationView: UIView {
     var imgThumb: UIImageView?
     
     var tapGesture: UITapGestureRecognizer?
+    var panGesture: UIPanGestureRecognizer?
     
     var onTabHandleBlock: (() -> Void)?
     var onDidDismissBlock: (() -> Void)?
@@ -247,10 +248,44 @@ public class HDNotificationView: UIView {
     //  MARK: - PAN GESTURE
     /// ----------------------------------------------------------------------------------
     private func _setUpPanGesture() {
+        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(_handlePanGesture(gesture:)))
+        panGesture.delegate = self
         
+        self.addGestureRecognizer(panGesture)
+        self.panGesture = panGesture
     }
     @objc private func _handlePanGesture(gesture: UIPanGestureRecognizer) {
         
+        switch gesture.state {
+        case .began:
+            self._invalidateTimer()
+            
+        case .changed:
+            guard let _constraintMarginTop = self.constraintMarginTop else {
+                return
+            }
+            let translation = gesture.translation(in: self)
+            var newConstraintConstant = _constraintMarginTop.constant + translation.y
+            newConstraintConstant = min(newConstraintConstant, self.appearance.viewMargin.top)
+            _constraintMarginTop.constant = newConstraintConstant
+            
+            gesture.setTranslation(CGPoint.zero, in: self)
+            
+        case .ended:
+            /// Dismiss
+            if self.frame.minY < -35.0 {
+                self.dismiss(animated: true, onComplete: nil)
+            }
+                
+            /// No dimiss
+            else {
+                self._setUpTimerScheduleToDismiss(halfTime: true)
+                self._returnToDisplayPosition(animated: true, onComplete: nil)
+            }
+            
+        case .possible, .cancelled, .failed:
+            self._setUpTimerScheduleToDismiss(halfTime: true)
+        }
     }
     
     //  MARK: - SHOW
@@ -290,15 +325,17 @@ public class HDNotificationView: UIView {
         self.constraintMarginTop?.constant = _appearance.viewMargin.top
         UIView.animate(
             withDuration: _appearance.animationDuration,
+            delay: 0.0,
+            options: .curveEaseOut,
             animations: {
                 _keyWindow.layoutIfNeeded()
-            },
+        },
             completion: { (finished) in
-                
-            })
+
+        })
         
         /// Shedule to dismiss
-        self._setUpTimerScheduleToDismiss()
+        self._setUpTimerScheduleToDismiss(halfTime: false)
     }
     
     //  MARK: - DISMISS
@@ -318,8 +355,6 @@ public class HDNotificationView: UIView {
         /// Reset and callback
         func _resetAndCallback() {
             self.removeFromSuperview()
-            HDNotificationView._curNotiView = nil
-            
             UIApplication.shared.keyWindow?.windowLevel = .normal
             
             self.onDidDismissBlock?()
@@ -328,18 +363,49 @@ public class HDNotificationView: UIView {
         
         /// Animate dismiss
         if animated {
+            HDNotificationView._curNotiView = nil
+            
             self.constraintMarginTop?.constant = _appearance.viewMarginTopPreDisplay(notiData: _notiData)
             UIView.animate(
                 withDuration: _appearance.animationDuration,
+                delay: 0.0,
+                options: .curveEaseOut,
+                animations: {
+                    _keyWindow.layoutIfNeeded()
+                },
+                completion: { (finished) in
+                    _resetAndCallback()
+                })
+        }
+        else {
+            HDNotificationView._curNotiView = nil
+            _resetAndCallback()
+        }
+    }
+    
+    private func _returnToDisplayPosition(animated: Bool, onComplete: (() -> Void)?) {
+        
+        guard let _keyWindow = UIApplication.shared.keyWindow else {
+            return
+        }
+        let _appearance = self.appearance
+        
+        /// Animation
+        self.constraintMarginTop?.constant = _appearance.viewMargin.top
+        if animated {
+            UIView.animate(
+                withDuration: _appearance.returnPositionAnimationDuration,
+                delay: 0.0,
+                options: .curveEaseOut,
                 animations: {
                     _keyWindow.layoutIfNeeded()
             },
                 completion: { (finished) in
-                    _resetAndCallback()
+                    onComplete?()
             })
         }
         else {
-            _resetAndCallback()
+            onComplete?()
         }
     }
     
@@ -350,14 +416,34 @@ public class HDNotificationView: UIView {
         self._timer?.invalidate()
         self._timer = nil
     }
-    private func _setUpTimerScheduleToDismiss() {
+    private func _setUpTimerScheduleToDismiss(halfTime: Bool) {
         self._invalidateTimer()
         
         let _appearance = self.appearance
-        self._timer = Timer.scheduledTimer(timeInterval: _appearance.appearingDuration, target: self, selector: #selector(_handleTimerSheduleToDismiss), userInfo: nil, repeats: false)
+        self._timer = Timer.scheduledTimer(
+            timeInterval: !halfTime ? _appearance.appearingDuration : _appearance.appearingDuration/2.0,
+            target: self,
+            selector: #selector(_handleTimerSheduleToDismiss),
+            userInfo: nil,
+            repeats: false)
         
     }
     @objc private func _handleTimerSheduleToDismiss() {
         self.dismiss(animated: true, onComplete: nil)
+    }
+}
+
+/// ----------------------------------------------------------------------------------
+//  MARK: - GESTURE DELEGATE
+/// ----------------------------------------------------------------------------------
+extension HDNotificationView: UIGestureRecognizerDelegate {
+    
+    public override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        
+        guard let _panGesture = self.panGesture, gestureRecognizer == _panGesture else {
+            return super.gestureRecognizerShouldBegin(gestureRecognizer)
+        }
+
+        return _panGesture.velocity(in: self).y < 0.0
     }
 }
