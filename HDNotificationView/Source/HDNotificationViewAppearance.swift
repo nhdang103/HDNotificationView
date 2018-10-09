@@ -127,7 +127,7 @@ public class HDNotificationAppearance: NSObject {
     /// Time
     var timeTextColor: UIColor = UIColor.black
     var timeTextFont: UIFont = UIFont.systemFont(ofSize: 13.0, weight: UIFont.Weight.regular)
-    let timeMargin: UIEdgeInsets = UIEdgeInsets(top: 0.0, left: 0.0, bottom: 0.0, right: 16.0)
+    let timeMargin: UIEdgeInsets = UIEdgeInsets(top: 0.0, left: 8.0, bottom: 0.0, right: 16.0)
     
     //  MARK: - HELPER
     /// ----------------------------------------------------------------------------------

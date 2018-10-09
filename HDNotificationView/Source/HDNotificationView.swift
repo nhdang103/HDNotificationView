@@ -182,10 +182,16 @@ public class HDNotificationView: UIView {
         lblTime.font = _appearance.timeTextFont
         self.lblTime = lblTime
         
+        let layoutPriority = lblTime.contentCompressionResistancePriority(for: .horizontal)
+        let newLayoutPriority = UILayoutPriority(layoutPriority.rawValue + 1.0)
+        lblTime.setContentCompressionResistancePriority(newLayoutPriority, for: .horizontal)
+        
         self.viewBorderedContainer.addSubview(lblTime)
         lblTime.snp.makeConstraints { (maker) in
             maker.trailing.equalTo(-_appearance.timeMargin.right)
+            
             maker.centerY.equalTo(self.lblTitle.snp.centerY)
+            maker.leading.greaterThanOrEqualTo(self.lblTitle.snp.trailing).offset(_appearance.timeMargin.left)
         }
     }
     private func _layoutImageThumb() {
