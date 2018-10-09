@@ -16,9 +16,14 @@ public class HDNotificationAppearance: NSObject {
     //  MARK: - NOTIFICATION VIEW
     /// ----------------------------------------------------------------------------------
     /// Margin
-    let viewMargin: UIEdgeInsets = UIEdgeInsets(top: 8.0, left: 8.0, bottom: 0.0, right: 8.0)
-    let viewRoundCornerRadius: CGFloat = 13.0
-    
+    let viewMargin: UIEdgeInsets = {
+        if UIDevice.isiPhone_Notch {
+            return UIEdgeInsets(top: 34.0, left: 8.0, bottom: 0.0, right: 8.0)
+        }
+        else {
+            return UIEdgeInsets(top: 8.0, left: 8.0, bottom: 0.0, right: 8.0)
+        }
+    }()
     func viewMarginTopPreDisplay(notiData: HDNotificationData?) -> CGFloat {
         guard let _notiData = notiData else {
             return 0.0
@@ -27,6 +32,9 @@ public class HDNotificationAppearance: NSObject {
         let offset = self.viewMargin.top + self.viewSizeHeigth(notiData: _notiData)
         return -offset
     }
+    
+    /// Corner
+    let viewRoundCornerRadius: CGFloat = 13.0
     
     /// Size
     func viewInitRect(notiData: HDNotificationData?) -> CGRect {
@@ -165,4 +173,33 @@ public class HDNotificationAppearance: NSObject {
         
         return _attributedString
     }
+}
+
+/// ----------------------------------------------------------------------------------
+//  MARK: - UIDEVICE EXTENSION
+/// ----------------------------------------------------------------------------------
+extension UIDevice {
+    
+    //  MARK: - SCREEN TYPE
+    /// ----------------------------------------------------------------------------------
+    @nonobjc static let screenSize: CGSize      = UIScreen.main.bounds.size
+    @nonobjc static let screenScale: CGFloat    = UIScreen.main.scale
+    
+    /// 3G, 3GS, 4, 4S
+    @nonobjc static let isiPhone_35: Bool = screenSize.height == 480.0
+    /// 5, 5S, 5C, SE
+    @nonobjc static let isiPhone_40: Bool = screenSize.height == 568.0
+    /// 6, 6S, 7, 8
+    @nonobjc static let isiPhone_47: Bool = screenSize.height == 667.0
+    /// 6+, 6S+, 7+, 8+
+    @nonobjc static let isiPhone_55: Bool = screenSize.height == 736.0
+    /// X, XS
+    @nonobjc static let isiPhone_58: Bool = screenSize.height == 812.0
+    /// XR
+    @nonobjc static let isiPhone_61: Bool = (screenSize.height == 896.0 && screenScale == 2.0)
+    /// XS Max
+    @nonobjc static let isiPhone_65: Bool = (screenSize.height == 896.0 && screenScale == 3.0)
+    
+    /// Notch: X, XMax, XR
+    @nonobjc static let isiPhone_Notch: Bool = (isiPhone_58 || isiPhone_61 || isiPhone_65)
 }
