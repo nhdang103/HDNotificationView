@@ -28,7 +28,7 @@ github "nhdang103/HDNotificationView"
 - Add **Snapkit** as a dependence framework to your project.
 
 ## Usage
-```
+```swift
 let notiData = HDNotificationData(
             iconImage: UIImage(named: "Icon"),
             appTitle: "Notification View".uppercased(),
